@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>{% block title %}RSA{% endblock %} · Roadside Intelligence</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+{% block head %}{% endblock %}
+</head>
+<body>
+<a class="sr-only" href="#main">Skip to content</a>
+<div class="ambient" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+{% if current_user %}
+{% macro navlinks(role) %}
+  {% if role == 'driver' %}
+    <a href="{{ url_for('dashboard') }}">Command Center</a>
+    <a href="{{ url_for('report') }}">⚠ Get Assistance</a>
+    <a href="{{ url_for('vehicles') }}">▣ Vehicles</a>
+    <a href="{{ url_for('history') }}">History</a>
+  {% elif role == 'provider' %}
+    <a href="{{ url_for('provider_dashboard') }}">Provider Workspace</a>
+  {% elif role == 'admin' %}
+    <a href="{{ url_for('admin_dashboard') }}">Operations</a>
+    <a href="{{ url_for('admin_requests') }}">Requests</a>
+    <a href="{{ url_for('admin_providers') }}">Providers</a>
+    <a href="{{ url_for('admin_users') }}">Users</a>
+    <a href="{{ url_for('admin_reports') }}">Reports</a>
+    <a href="{{ url_for('admin_audit') }}">Audit</a>
+  {% endif %}
+{% endmacro %}
+<header class="topbar">
+  <a class="brand" href="{{ url_for('home') }}"><span class="brand-mark" aria-hidden="true">⚡</span><span><b>RSA</b><small>ROADSIDE INTELLIGENCE</small></span></a>
+  <nav aria-label="Main">{{ navlinks(current_user['role']) }}</nav>
+  <div class="nav-actions">
+    <a class="nav-bell" href="{{ url_for('notifications_page') }}" aria-label="Notifications ({{ unread_notifications }} unread)">🔔<span class="count" data-notification-count {% if not unread_notifications %}hidden{% endif %}>{{ unread_notifications }}</span></a>
+    <div class="user-pill"><span class="avatar" aria-hidden="true">{{ current_user['name'][0]|upper }}</span><span><b>{{ current_user['name'] }}</b><small>{{ current_user['role']|title }}</small></span>
+      <form class="inline-form" method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link-button" type="submit" title="Sign out" aria-label="Sign out">↪</button></form>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" aria-label="Main (mobile)">{{ navlinks(current_user['role']) }}</nav>
+{% else %}
+<header class="topbar"><a class="brand" href="{{ url_for('home') }}"><span class="brand-mark" aria-hidden="true">⚡</span><span><b>RSA</b><small>ROADSIDE INTELLIGENCE</small></span></a><div class="nav-actions"><span class="status-chip">● RSA AI</span><a href="{{ url_for('login') }}">Sign in</a><a class="btn primary" href="{{ url_for('register') }}">Get started →</a></div></header>
+{% endif %}
+<main id="main">{% with messages=get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack" role="status">{% for category,msg in messages %}<div class="flash {{ category }}">{{ msg }}</div>{% endfor %}</div>{% endif %}{% endwith %}{% block content %}{% endblock %}</main>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>{% block scripts %}{% endblock %}
+</body></html>

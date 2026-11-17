@@ -1,0 +1,15 @@
+{% extends 'base.html' %}{% block title %}Audit log{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">AUDIT</p><h1>Audit log.</h1><p>Administrative and account actions: who, what, which resource, when. Secrets are never recorded.</p></div>
+  <div class="panel glass mt"><div class="table-wrap"><table class="data">
+    <thead><tr><th>#</th><th>Time</th><th>Actor</th><th>Action</th><th>Resource</th><th>Details</th><th>IP</th></tr></thead>
+    <tbody>{% for a in items %}<tr>
+      <td>{{ a['id'] }}</td><td>{{ a['created_at']|utc }}</td>
+      <td>{{ a['actor_name'] or 'system' }}<small>{{ a['actor_email'] or '' }}</small></td>
+      <td><code>{{ a['action'] }}</code></td>
+      <td>{{ a['resource_type'] or '—' }}{% if a['resource_id'] %} #{{ a['resource_id'] }}{% endif %}</td>
+      <td><small>{% for k, v in a['metadata'].items() %}{{ k }}: {{ v }}{% if not loop.last %} · {% endif %}{% endfor %}</small></td>
+      <td><small>{{ a['ip_address'] or '' }}</small></td>
+    </tr>{% else %}<tr><td colspan="7" class="empty">No audit entries yet.</td></tr>{% endfor %}</tbody>
+  </table></div></div>
+</section>{% endblock %}

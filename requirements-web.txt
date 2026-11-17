@@ -1,0 +1,3 @@
+# Minimal dependencies for the RSA web application (development).
+Flask>=3.0,<4
+scikit-learn>=1.3        # TF-IDF + Logistic Regression / Random Forest incident models (optional: rules work without it)

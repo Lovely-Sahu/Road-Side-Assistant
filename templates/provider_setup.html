@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block title %}Provider profile{% endblock %}{% block content %}
+<section class="auth-page"><div class="auth-card glass wide">
+  <p class="eyebrow">PROVIDER WORKSPACE</p><h1>Set up your business.</h1>
+  <p>Your account has no provider profile yet. Create one to start receiving jobs after verification.</p>
+  <form method="post" action="{{ url_for('provider_profile') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-grid">
+      <label>Business name<input name="business_name" required minlength="2" maxlength="120"></label>
+      <label>Service type<select name="service_type">{% for value,label in service_types %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></label>
+      <label class="full">Business phone<input name="phone" required value="{{ current_user['phone'] or '' }}"></label>
+    </div>
+    <button class="btn primary big" type="submit">Create profile</button>
+  </form>
+</div></section>{% endblock %}

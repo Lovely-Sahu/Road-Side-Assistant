@@ -1,0 +1,255 @@
+{% extends 'base.html' %}{% block title %}Live Tracking{% endblock %}
+{% block head %}{% include 'partials/leaflet.html' %}{% endblock %}
+{% block content %}
+<section class="page">
+  <div class="page-title">
+    <p class="eyebrow">LIVE RESPONSE · REQUEST #{{ item['id'] }}</p>
+    <h1 id="headline">{{ status_label(item['status']) }}.</h1>
+    <p>{{ item['incident_label'] }} · <span class="badge {{ item['priority']|lower }}">{{ item['priority'] }}</span> · reported {{ item['created_at']|utc }}{% if item['registration_number'] %} · {{ item['registration_number'] }}{% endif %}</p>
+  </div>
+  <div id="photo-warning"></div>
+
+  <div class="tracking-grid">
+    <div class="panel glass">
+      <div id="map" class="live-map" role="img" aria-label="Map showing the breakdown location and the provider's last shared location"></div>
+      <div class="map-meta">
+        <div><small>Breakdown location</small><b id="m-driver">—</b></div>
+        <div><small>Provider location</small><b id="m-provider">—</b></div>
+        <div><small>Distance / ETA</small><b id="m-distance">—</b></div>
+      </div>
+      <div id="provider-card" class="provider-card-large"><b class="skeleton">Loading provider…</b></div>
+      <div id="why"></div>
+    </div>
+
+    <div class="panel glass timeline">
+      <div class="card-label">RESPONSE TIMELINE</div>
+      <div id="timeline" aria-live="polite"><div class="skeleton">Loading…</div></div>
+      <div id="actions" class="tracking-actions"></div>
+      {% if current_user['role'] == 'provider' %}<p id="share-line" class="small muted mt" aria-live="polite" hidden></p>{% endif %}
+      <div id="feedback"></div>
+    </div>
+  </div>
+
+  <div class="grid-2 mt">
+    <div class="panel glass" id="diagnosis-panel"><div class="card-label">AI DIAGNOSIS (PREDICTION)</div><div id="diagnosis" class="mt"><span class="muted">Loading…</span></div></div>
+    <div class="panel glass"><div class="card-label">DETAILS</div>
+      <dl class="kv mt">
+        <dt>Description</dt><dd>{{ item['description'] or '—' }}</dd>
+        <dt>Service</dt><dd>{{ item['recommended_service']|service_name }}</dd>
+        {% if current_user['role'] != 'driver' %}<dt>Driver</dt><dd>{{ item['driver_name'] }}{% if item['driver_phone'] %} · <a href="tel:{{ item['driver_phone'] }}">{{ item['driver_phone'] }}</a>{% endif %}</dd>{% endif %}
+        <dt>Vehicle</dt><dd>{% if item['registration_number'] %}{{ item['registration_number'] }} · {{ item['make'] or '' }} {{ item['model'] or '' }}{% else %}Not selected{% endif %}</dd>
+      </dl>
+      <div class="photo-grid" id="photos">{% for a in attachments %}<a href="{{ a['url'] }}" target="_blank" rel="noopener"><img src="{{ a['url'] }}" alt="Photo attached to request {{ item['id'] }}" loading="lazy"></a>{% endfor %}</div>
+      {% if current_user['role'] == 'admin' %}<a class="btn small ghost mt" href="{{ url_for('admin_request_detail', request_id=item['id']) }}">Open admin view →</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+<dialog class="rsa-dialog" id="reason-dialog">
+  <form method="dialog">
+    <h3 id="reason-title">Reason</h3>
+    <label for="reason-text" class="muted small" id="reason-help">Tell us why.</label>
+    <textarea id="reason-text" rows="3" maxlength="500"></textarea>
+    <div class="row mt"><button class="btn primary" value="ok">Confirm</button><button class="btn ghost" value="cancel" formnovalidate>Back</button></div>
+  </form>
+</dialog>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tracking-map.js') }}"></script>
+{% if current_user['role'] == 'provider' %}<script src="{{ url_for('static', filename='js/provider-location.js') }}"></script>{% endif %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const id = {{ item['id'] }};
+  const role = {{ current_user['role']|tojson }};
+  const actionLabels = {{ action_labels|tojson }};
+  const mapConfig = {{ map_config|tojson }};
+  const $ = (s) => document.querySelector(s);
+  const map = new RSATrackMap($('#map'), mapConfig);
+  let timer = null, busy = false;
+
+  try { const w = sessionStorage.getItem('rsa-photo-warning'); if (w) { $('#photo-warning').innerHTML = '<div class="notice warn">' + RSA.esc(w) + '</div>'; sessionStorage.removeItem('rsa-photo-warning'); } } catch (e) {}
+
+  function ago(seconds) {
+    if (seconds === null || seconds === undefined) return '';
+    if (seconds < 60) return seconds + ' s ago';
+    if (seconds < 3600) return Math.round(seconds / 60) + ' min ago';
+    return Math.round(seconds / 3600) + ' h ago';
+  }
+
+  function askReason(title, help, required) {
+    return new Promise((resolve) => {
+      const dlg = $('#reason-dialog');
+      $('#reason-title').textContent = title; $('#reason-help').textContent = help; $('#reason-text').value = '';
+      if (!dlg.showModal) { const v = prompt(title + '\n' + help); resolve(v === null ? null : v); return; }
+      dlg.onclose = () => {
+        if (dlg.returnValue !== 'ok') return resolve(null);
+        const v = $('#reason-text').value.trim();
+        if (required && v.length < 3) { RSA.toast('Please enter a reason.', 'error'); return resolve(null); }
+        resolve(v);
+      };
+      dlg.showModal();
+    });
+  }
+
+  async function providerAction(matchId, status) {
+    let note = '';
+    if (status === 'REJECTED') { note = await askReason('Reject this job?', 'Optional: why can you not take it?', false); if (note === null) return; }
+    else if (status === 'UNABLE_TO_COMPLETE') { note = await askReason('Unable to complete?', 'Required: what prevents you from completing it? The job will be reassigned.', true); if (note === null) return; }
+    else if (status === 'COMPLETED') { note = await askReason('Complete the job?', 'Optional completion notes (work done, parts used).', false); if (note === null) return; }
+    busy = true;
+    if (LOC && LOC.TRACKED.indexOf(status) !== -1 && !LOC.optedOut()) shareLine('Getting your location to share with the driver…');
+    const res = LOC ? await LOC.changeStatus(matchId, status, note)
+                    : await RSA.api('/api/provider/job/' + matchId + '/status', { method: 'POST', form: { status, note } });
+    busy = false;
+    let msg = res.data.message || (res.ok ? 'Updated' : 'Failed');
+    if (res.ok && res.data.location_shared) msg = msg.replace(/\.$/, '') + ' · live location shared with the driver';
+    RSA.toast(msg, res.ok ? 'success' : 'error');
+    if (res.ok && res.location && res.location.error) shareLine(RSA.esc(res.location.message), true);
+    else if (res.ok && res.data.location_error) shareLine(RSA.esc(res.data.location_error), true);
+    else if (res.ok && res.data.location_shared && res.location && res.location.pos) onShareStatus({ state: 'sharing', accuracy: res.location.pos.coords.accuracy });
+    load();
+  }
+
+  // ---- provider: share live location automatically while Accepted / On the way / Arrived
+  const LOC = role === 'provider' ? window.RSAProviderLocation : null;
+  function shareLine(text, isError) {
+    const el = $('#share-line'); if (!el) return;
+    el.hidden = !text;
+    el.className = 'small mt ' + (isError ? 'notice warn' : 'muted');
+    el.innerHTML = text;
+  }
+  function onShareStatus(info) {
+    if (info.state === 'sharing') shareLine('<span class="badge active">live</span> Sharing your location with the driver (±' + Math.round(info.accuracy) + ' m). It stops automatically when you start the service.');
+    else if (info.state === 'error') shareLine(RSA.esc(info.message), true);
+    else if (info.state === 'idle') shareLine('');
+  }
+  function syncSharing(d) {
+    if (!LOC) return;
+    const p = d.provider;
+    const tracked = p && d.is_open && LOC.TRACKED.indexOf(p.status) !== -1;
+    if (!tracked) { LOC.stop(); shareLine(''); return; }
+    if (LOC.optedOut()) { LOC.stop(); shareLine('Automatic location sharing is off (switch it on from your dashboard). The driver sees only your base location.'); return; }
+    if (LOC.isBlocked()) return;  // the warning is already on screen
+    const el = $('#share-line');
+    if (el && el.hidden) shareLine('Sharing your location with the driver…');
+    LOC.start(onShareStatus);
+  }
+
+  async function cancelRequest() {
+    const reason = await askReason('Cancel this request?', 'Optional: tell us why you are cancelling.', false);
+    if (reason === null) return;
+    const res = await RSA.api('/api/requests/' + id + '/cancel', { method: 'POST', form: { reason } });
+    RSA.toast(res.data.message, res.ok ? 'success' : 'error');
+    load();
+  }
+
+  function render(d) {
+    const r = d.request, p = d.provider, pl = d.provider_location, dl = d.driver_location, base = d.provider_base_location;
+    $('#headline').textContent = r.status_label + '.';
+
+    // ---- provider card
+    if (p) {
+      $('#provider-card').innerHTML = '<div class="avatar" aria-hidden="true">' + RSA.esc((p.business_name || 'R')[0]) + '</div><div class="spacer"><b>' + RSA.esc(p.business_name) +
+        '</b><span>' + RSA.esc(p.service_type || 'Roadside assistance') + ' · ' + (p.rating ? '★ ' + RSA.esc(p.rating) : 'unrated') +
+        (p.phone && d.is_open ? ' · <a href="tel:' + RSA.esc(p.phone) + '">' + RSA.esc(p.phone) + '</a>' : '') + '</span></div><strong class="status ' + RSA.esc(p.status.toLowerCase()) + '">' + RSA.esc(p.status_label) + '</strong>';
+      const b = p.match_details;
+      $('#why').innerHTML = b ? '<details class="mt"><summary class="small muted">Why this provider?</summary><ul class="steps-list small">' +
+        '<li>Service suitability: ' + RSA.esc(b.provider_category) + ' for ' + RSA.esc(String(b.requested_service).replaceAll('_', ' ')) + ' (' + Math.round(b.suitability * 100) + '%, ' + b.suitability_points + ' pts)</li>' +
+        '<li>Distance: ' + (b.distance_km !== null ? b.distance_km + ' km straight-line' : RSA.esc(b.distance_note)) + ' (' + b.distance_points + ' pts)</li>' +
+        '<li>Rating: ' + (b.rating !== null ? b.rating + '/5' : 'unrated (neutral score)') + ' (' + b.rating_points + ' pts)</li>' +
+        '<li>Only available, verified providers without another active job are considered.</li></ul></details>' : '';
+    } else {
+      $('#provider-card').innerHTML = d.is_open ? '<b>Waiting for an available provider…</b><span>Your request is saved and will be assigned automatically. If anyone is in danger, call 112.</span>' :
+        '<b>No provider</b><span>This request is ' + RSA.esc(r.status_label.toLowerCase()) + '.</span>';
+      $('#why').innerHTML = '';
+    }
+
+    // ---- map + meta
+    $('#m-driver').textContent = dl ? dl.latitude.toFixed(4) + ', ' + dl.longitude.toFixed(4) : 'Not shared';
+    if (pl) {
+      $('#m-provider').innerHTML = (pl.stale ? '<span class="badge pending">stale</span> ' : '<span class="badge active">live</span> ') + RSA.esc(ago(pl.age_seconds)) +
+        '<span class="muted small" style="display:block;font-weight:400">' + pl.latitude.toFixed(4) + ', ' + pl.longitude.toFixed(4) + '</span>';
+    } else if (base) {
+      $('#m-provider').innerHTML = '<span class="badge pending">base</span> not live yet' +
+        '<span class="muted small" style="display:block;font-weight:400">' + base.latitude.toFixed(4) + ', ' + base.longitude.toFixed(4) + ' · updates when the provider shares live location</span>';
+    } else if (p && d.is_open && ['ACCEPTED', 'ON_THE_WAY', 'ARRIVED'].indexOf(p.status) !== -1) {
+      $('#m-provider').innerHTML = (role === 'provider' ? 'Waiting for your location' : 'Waiting for the provider\'s location') +
+        '<span class="muted small" style="display:block;font-weight:400">It appears here as soon as their device shares it</span>';
+    } else if (p && d.is_open && p.status === 'ASSIGNED') {
+      $('#m-provider').innerHTML = 'Not shared yet' +
+        '<span class="muted small" style="display:block;font-weight:400">Shared automatically when the provider accepts or is on the way</span>';
+    } else {
+      $('#m-provider').textContent = '—';
+    }
+    let distanceText = '—';
+    if (d.live_distance_km !== null && d.live_distance_km !== undefined) distanceText = d.live_distance_km + ' km straight-line';
+    else if (d.base_distance_km !== null && d.base_distance_km !== undefined) distanceText = d.base_distance_km + ' km from provider base (straight-line)';
+    $('#m-distance').textContent = distanceText + (pl && dl && !mapConfig.routing_url ? ' · road ETA unavailable' : '');
+    const shownProvider = pl || (base ? Object.assign({ base: true }, base) : null);
+    map.update(dl, shownProvider, { driver: 'Breakdown location', provider: p ? p.business_name + (pl ? ' — live, ' + ago(pl.age_seconds) : ' — base location (not live)') : 'Provider' });
+    if (pl && dl && mapConfig.routing_url) {
+      map.routeBetween(pl, dl).then((route) => {
+        $('#m-distance').textContent = route ? route.km.toFixed(1) + ' km by road · ~' + Math.max(1, Math.round(route.minutes)) + ' min (routing estimate)' : distanceText + ' · routing unavailable';
+      });
+    }
+
+    // ---- timeline
+    $('#timeline').innerHTML = d.tracking.map((x, i) => '<div class="timeline-item ' + (i === d.tracking.length - 1 ? 'current' : '') + '"><i aria-hidden="true"></i><div><b>' + RSA.esc(x.status_label) + '</b><small>' + RSA.esc(x.notes || 'Status updated') + '</small>' + RSA.timeHtml(x.updated_at) + '</div></div>').join('') || '<div class="empty">No updates yet.</div>';
+
+    // ---- actions
+    const actions = [];
+    if (d.actions.can_cancel && role === 'driver') actions.push('<button class="btn danger" data-act="cancel">Cancel request</button>');
+    (d.actions.provider_next || []).forEach((s) => actions.push('<button class="btn ' + (s === 'REJECTED' || s === 'UNABLE_TO_COMPLETE' ? 'danger' : 'primary') + '" data-status="' + RSA.esc(s) + '">' + RSA.esc(actionLabels[s] || s) + '</button>'));
+    const back = role === 'provider' ? '{{ url_for("provider_dashboard") }}' : role === 'admin' ? '{{ url_for("admin_requests") }}' : '{{ url_for("dashboard") }}';
+    actions.push('<a class="btn ghost" href="' + back + '">Back to dashboard</a>');
+    $('#actions').innerHTML = actions.join('');
+    const cancelBtn = document.querySelector('[data-act="cancel"]'); if (cancelBtn) cancelBtn.onclick = cancelRequest;
+    document.querySelectorAll('[data-status]').forEach((b) => b.onclick = () => { b.disabled = true; providerAction(p.id, b.dataset.status); });
+
+    // ---- feedback
+    if (d.feedback) {
+      $('#feedback').innerHTML = '<div class="notice ok mt">Your rating: ' + '★'.repeat(d.feedback.rating) + (d.feedback.comment ? ' — ' + RSA.esc(d.feedback.comment) : '') + '</div>';
+    } else if (d.actions.can_give_feedback && !$('#fb-form')) {
+      $('#feedback').innerHTML = '<form id="fb-form" class="mt notice info"><b>How was the service?</b><div class="row mt"><select name="rating" required aria-label="Rating"><option value="">Rating</option>' +
+        [5,4,3,2,1].map(n => '<option value="' + n + '">' + n + ' ★</option>').join('') + '</select><input name="comment" maxlength="1000" placeholder="Optional comment" aria-label="Comment" class="spacer"><button class="btn primary small" type="submit">Send</button></div></form>';
+      $('#fb-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const res = await RSA.api('/api/requests/' + id + '/feedback', { method: 'POST', form: new FormData(e.target) });
+        RSA.toast(res.data.message, res.ok ? 'success' : 'error'); if (res.ok) load();
+      });
+    } else if (!d.actions.can_give_feedback) { $('#feedback').innerHTML = ''; }
+
+    // ---- diagnosis
+    const dg = d.diagnosis;
+    if (dg) {
+      const det = dg.details || {};
+      $('#diagnosis').innerHTML = '<b>' + RSA.esc(dg.diagnosis) + '</b> · <span class="badge ' + RSA.esc((dg.severity || '').toLowerCase()) + '">' + RSA.esc(dg.severity) + '</span>' +
+        '<p>' + RSA.esc(dg.explanation || '') + '</p>' +
+        (det.hazards && det.hazards.length ? '<div class="notice danger small">Hazards reported: ' + det.hazards.map(RSA.esc).join(', ') + '</div>' : '') +
+        (det.safety_steps && det.safety_steps.length ? '<b class="small">Safety steps</b><ul class="steps-list small">' + det.safety_steps.map(s => '<li>' + RSA.esc(s) + '</li>').join('') + '</ul>' : '') +
+        (det.likely_causes && det.likely_causes.length ? '<p class="small muted">Possible causes: ' + det.likely_causes.map(RSA.esc).join(', ') + '</p>' : '') +
+        (det.driver_corrected ? '<p class="small muted">Incident type corrected by the driver (AI suggested: ' + RSA.esc(det.ai_problem) + ').</p>' : '') +
+        (det.ml ? '<p class="small muted">ML check: Logistic Regression → ' + RSA.esc(det.ml.logistic_regression.label || det.ml.logistic_regression.problem) + ' (' + Math.round(det.ml.logistic_regression.probability * 100) + '%), Random Forest → ' +
+          RSA.esc(det.ml.random_forest.label || det.ml.random_forest.problem) + ' (' + Math.round(det.ml.random_forest.probability * 100) + '%)' +
+          (det.decision_source === 'ml' ? '. The incident type was decided by machine learning.' : '.') + '</p>' : '') +
+        '<p class="confidence-note">' + (dg.confidence !== null ? (det.decision_source === 'ml' ? 'ML probability ' : 'Match strength ') + Math.round(dg.confidence * 100) + '%. ' : '') + 'Automated prediction from the description; a technician must confirm the actual fault.</p>';
+    } else {
+      $('#diagnosis').innerHTML = '<span class="muted">No diagnosis recorded.</span>';
+    }
+    RSA.localTimes();
+  }
+
+  async function load() {
+    if (busy) return;
+    const res = await RSA.api('/api/tracking/' + id);
+    if (!res.ok) { RSA.toast(res.data.message || 'Could not refresh tracking.', 'error'); return; }
+    render(res.data);
+    syncSharing(res.data);
+    clearTimeout(timer);
+    if (res.data.is_open) timer = setTimeout(load, 5000);
+  }
+
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+  load();
+});
+</script>{% endblock %}

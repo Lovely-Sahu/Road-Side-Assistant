@@ -1,0 +1,136 @@
+text,label,group
+"Car heating too much, needle touching H",engine_overheating,1
+Bonnet is giving out smoke after a long drive,engine_overheating,2
+Engine got very hot and water is boiling in the radiator,engine_overheating,3
+Temp gauge shot up and there is steam,engine_overheating,4
+The cooling fan isn't running and the engine is overheated,engine_overheating,5
+My car is overheating in the traffic jam,engine_overheating,6
+"Lots of steam from the hood, car stopped",engine_overheating,7
+Coolant leaked and now the temperature light is red,engine_overheating,8
+"Engine is too hot, I can smell hot coolant",engine_overheating,9
+Heat warning on the dashboard and vapour from the engine,engine_overheating,10
+My scooter engine became extremely hot,engine_overheating,11
+Radiator burst and the engine is overheating,engine_overheating,12
+"The car is boiling, temperature is high",engine_overheating,13
+Engine temperature rising fast on the ghat section,engine_overheating,14
+Smoke and heat coming out from the engine area,engine_overheating,15
+"Brakes not working properly, pedal sinking",brake_failure,16
+Car not stopping even after pressing the brake hard,brake_failure,17
+Lost braking while going downhill,brake_failure,18
+The brake feels like there is nothing there,brake_failure,19
+"Braking power gone, using the gears to slow down",brake_failure,20
+Brake oil leak and the pedal is soft,brake_failure,21
+The brakes don't grip at all,brake_failure,22
+My bike brake cable snapped,brake_failure,23
+Brakes failed near the school zone,brake_failure,24
+Pressing brake but the vehicle is still moving,brake_failure,25
+Brake pedal stuck and not working,brake_failure,26
+"Very poor braking, the car skids and won't stop",brake_failure,27
+Brakes gave way on the flyover,brake_failure,28
+The scooter rear brake is not working,brake_failure,29
+Truck brake failure on the slope,brake_failure,30
+Tyre got puncher on the way,tyre_puncture,31
+Front wheel tyre has gone flat,tyre_puncture,32
+Tyre blasted on the expressway,tyre_puncture,33
+Air is going out from the back tyre,tyre_puncture,34
+I can see a screw in the tyre and it is low,tyre_puncture,35
+"Tire flat, no jack in the car",tyre_puncture,36
+My bike rear tyre is punctured,tyre_puncture,37
+Tyre sidewall is cut badly,tyre_puncture,38
+Wheel bent after a pothole and the tyre deflated,tyre_puncture,39
+Flat tyre and the spare is missing,tyre_puncture,40
+The tyre suddenly burst with a loud bang,tyre_puncture,41
+"Low tyre pressure, the tyre looks flat",tyre_puncture,42
+The tyre is leaking air from a hole,tyre_puncture,43
+Scooter tyre puncture near the market,tyre_puncture,44
+Tyre tread peeled off on the highway,tyre_puncture,45
+"Car is not starting, just tick tick sound",battery_failure,46
+"Battery down, need a jump start",battery_failure,47
+Turned the key and nothing happened at all,battery_failure,48
+Left the headlights on overnight and now it won't start,battery_failure,49
+"Self start not working, battery low",battery_failure,50
+"The car won't crank, battery seems dead",battery_failure,51
+"Starting problem, battery weak",battery_failure,52
+Battery fully drained,battery_failure,53
+All the dashboard lights are dim and the engine won't start,battery_failure,54
+Engine will not turn over in the cold morning,battery_failure,55
+My bike battery died,battery_failure,56
+Car not starting after long parking,battery_failure,57
+"Need a battery boost, the car is dead",battery_failure,58
+The battery is not holding charge and the car won't start,battery_failure,59
+"Clicking noise when starting, no crank",battery_failure,60
+Engine suddenly switched off on the road,engine_failure,61
+Car broke down near the bus stand,engine_failure,62
+Vehicle stopped running and won't restart,engine_failure,63
+My car stalls again and again,engine_failure,64
+Engine lost power and stopped,engine_failure,65
+Loud knock from the engine and then it died,engine_failure,66
+Car is shaking and the engine cut off,engine_failure,67
+"Clutch plate gone, the car won't move",engine_failure,68
+My bike stopped in the middle of the road,engine_failure,69
+Check engine light is on and the car has stopped,engine_failure,70
+Engine seized on the highway,engine_failure,71
+"The vehicle broke down, need a mechanic urgently",engine_failure,72
+Car stops whenever I put it in first gear,engine_failure,73
+Engine oil light came on and the engine shut down,engine_failure,74
+My van broke down,engine_failure,75
+Met with an accident at the crossing,accident,76
+A car banged into my car from the side,accident,77
+My car got hit by a truck,accident,78
+I crashed my bike into a wall,accident,79
+Collision with an auto rickshaw,accident,80
+Car hit the median and the front is damaged,accident,81
+Someone crashed into my parked car,accident,82
+"We had a small collision, bumper damaged",accident,83
+My car slipped and hit a tree,accident,84
+"Accident happened, airbags deployed",accident,85
+A bus rammed my car at the signal,accident,86
+Car toppled after hitting the divider,accident,87
+"Hit a buffalo on the highway, car damaged",accident,88
+My scooter was hit from behind,accident,89
+Two cars collided and mine is badly damaged,accident,90
+"Petrol khatam, vehicle stopped",fuel_problem,91
+No fuel left in the tank,fuel_problem,92
+"Car stopped, fuel is empty",fuel_problem,93
+"Need diesel, ran out on the highway",fuel_problem,94
+I ran out of petrol near the bridge,fuel_problem,95
+The tank is completely empty,fuel_problem,96
+"Fuel over, need delivery",fuel_problem,97
+Bike ran out of petrol,fuel_problem,98
+Low fuel light was on and now the engine stopped,fuel_problem,99
+Filled petrol instead of diesel,fuel_problem,100
+"CNG finished, no petrol either",fuel_problem,101
+Out of diesel near the toll gate,fuel_problem,102
+The fuel needle is at empty,fuel_problem,103
+"Please send petrol, my car is out of fuel",fuel_problem,104
+Scooter has no petrol,fuel_problem,105
+Headlights went off while driving at night,electrical_failure,106
+Dashboard is blank and the lights are off,electrical_failure,107
+Sparks from the wiring near the fuse box,electrical_failure,108
+"Fuse blown, indicators dead",electrical_failure,109
+The power windows and central lock stopped working,electrical_failure,110
+Brake lights are not working,electrical_failure,111
+Lights flickering and the horn is not working,electrical_failure,112
+Short circuit smell from the dashboard,electrical_failure,113
+The speedometer and all meters stopped working,electrical_failure,114
+My bike headlight is not working,electrical_failure,115
+"Electrical fault, the screen went dark",electrical_failure,116
+Tail lamp and indicators are not working,electrical_failure,117
+Burnt wire smell and the lights are off,electrical_failure,118
+The fog lights stopped working,electrical_failure,119
+The wiper motor and lights died together,electrical_failure,120
+AC blowing hot air,other,121
+Keys are locked inside the car,other,122
+Strange rattle from the rear seat,other,123
+The car door won't lock,other,124
+Windscreen got a small crack from a stone,other,125
+Lost the car key at the mall,other,126
+The boot lid is stuck,other,127
+Rain water leaking inside the car,other,128
+The seat belt won't come out,other,129
+The side mirror is broken,other,130
+The car has a bad smell inside,other,131
+The sunroof won't close,other,132
+Squeaking noise from the suspension,other,133
+The door handle came off,other,134
+Car interior needs cleaning,other,135

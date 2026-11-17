@@ -1,0 +1,46 @@
+{% extends 'base.html' %}{% block title %}Admin{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title row"><div class="spacer"><p class="eyebrow">RSA OPERATIONS</p><h1>System command center.</h1><p>Operational overview across users, providers and assistance requests. Figures come straight from the database.</p></div>
+    <form method="post" action="{{ url_for('admin_maintenance') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn primary" type="submit" title="Retry matching for waiting requests and run escalation checks">Retry matching &amp; escalations</button></form>
+  </div>
+
+  {% if stats['unassigned_emergencies'] %}
+    <div class="notice danger"><b>{{ stats['unassigned_emergencies'] }} emergency request(s) have no provider.</b> Review them below and dispatch manually if needed.</div>
+  {% endif %}
+  {% if stats['pending_verification'] %}
+    <div class="notice warn"><b>{{ stats['pending_verification'] }} provider(s) awaiting verification.</b> <a href="{{ url_for('admin_providers') }}">Review →</a></div>
+  {% endif %}
+
+  <div class="stat-row wide" id="stats">
+    {% for key in ['total_users','active_drivers','registered_providers','approved_providers','dispatchable_providers','requests_total','requests_unassigned','requests_assigned','requests_in_progress','requests_completed','requests_cancelled','unassigned_emergencies'] %}
+      <div class="stat glass"><small>{{ key|label }}</small><b data-stat="{{ key }}">{{ stats[key] }}</b><span class="def">{{ definitions[key] }}</span></div>
+    {% endfor %}
+  </div>
+
+  <div class="grid-2 mt">
+    <div class="panel glass">
+      <div class="panel-head"><div><small>NEEDS ATTENTION</small><h2>Unassigned emergencies</h2></div></div>
+      {% for r in emergencies %}
+        <a class="activity" href="{{ url_for('admin_request_detail', request_id=r['id']) }}"><span class="activity-icon">!</span><span><b>#{{ r['id'] }} · {{ r['incident_type']|label }}</b><small>{{ r['recommended_service']|service_name }} · {{ (r['description'] or '')[:60] }}</small></span><em class="status requested">{{ r['created_at']|utc }}</em></a>
+      {% else %}<div class="empty">No unassigned emergencies.</div>{% endfor %}
+    </div>
+    <div class="panel glass">
+      <div class="panel-head"><div><small>LATEST</small><h2>Recent requests</h2></div><a class="small muted" href="{{ url_for('admin_requests') }}">All →</a></div>
+      {% for r in recent %}
+        <a class="activity" href="{{ url_for('admin_request_detail', request_id=r['id']) }}"><span class="activity-icon">{{ '✓' if r['status']=='COMPLETED' else '!' }}</span><span><b>#{{ r['id'] }} · {{ r['incident_type']|label }}</b><small>{{ r['business_name'] or 'No provider' }} · <span class="badge {{ r['priority']|lower }}">{{ r['priority'] }}</span></small></span><em class="status {{ r['status']|lower }}">{{ status_label(r['status']) }}</em></a>
+      {% else %}<div class="empty">No requests yet.</div>{% endfor %}
+    </div>
+  </div>
+
+  <div class="panel glass mt">
+    <div class="card-label">NOTIFICATION CHANNELS</div>
+    <p class="mt">In-app: <span class="badge active">on</span> · E-mail: <span class="badge {{ 'active' if channels['email'] else 'pending' }}">{{ 'configured' if channels['email'] else 'not configured' }}</span> · SMS: <span class="badge pending">not configured (needs an SMS gateway account)</span></p>
+  </div>
+</section>{% endblock %}
+{% block scripts %}<script>
+setInterval(async () => {
+  if (document.hidden) return;
+  const res = await RSA.api('/api/admin/overview');
+  if (res.ok) Object.entries(res.data.stats).forEach(([k, v]) => { const el = document.querySelector('[data-stat="' + k + '"]'); if (el) el.textContent = v; });
+}, 15000);
+</script>{% endblock %}

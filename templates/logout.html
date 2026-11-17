@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% block title %}Sign out{% endblock %}{% block content %}
+<section class="auth-page"><div class="auth-card glass">
+  <p class="eyebrow">RSA NETWORK</p><h1>Sign out?</h1>
+  <form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn primary big" type="submit">Sign out</button></form>
+</div></section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% block title %}Service history{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">SERVICE HISTORY</p><h1>Your requests.</h1><p>Every incident, diagnosis, provider and outcome.</p></div>
+  <div class="panel glass mt">
+    {% if items %}
+    <div class="table-wrap"><table class="data">
+      <thead><tr><th>#</th><th>Reported</th><th>Incident</th><th>AI diagnosis</th><th>Priority</th><th>Provider</th><th>Status</th><th>Your rating</th><th></th></tr></thead>
+      <tbody>
+      {% for r in items %}
+        <tr>
+          <td>{{ r['id'] }}</td>
+          <td>{{ r['created_at']|utc }}</td>
+          <td>{{ r['incident_type']|label }}<small>{{ (r['description'] or '')[:70] }}</small></td>
+          <td>{{ r['diagnosis_title'] or '—' }}</td>
+          <td><span class="badge {{ r['priority']|lower }}">{{ r['priority'] }}</span></td>
+          <td>{{ r['business_name'] or '—' }}</td>
+          <td><em class="status {{ r['status']|lower }}">{{ status_label(r['status']) }}</em></td>
+          <td>{% if r['feedback_rating'] %}{{ '★' * r['feedback_rating'] }}{% elif r['status'] == 'COMPLETED' %}<a href="{{ url_for('tracking', request_id=r['id']) }}">Rate →</a>{% else %}—{% endif %}</td>
+          <td><a class="btn small ghost" href="{{ url_for('tracking', request_id=r['id']) }}">Open</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% else %}<div class="empty">No requests yet. <a href="{{ url_for('report') }}">Report a problem</a> when you need help.</div>{% endif %}
+  </div>
+</section>{% endblock %}

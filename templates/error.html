@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}{{ status }}{% endblock %}{% block content %}
+<section class="error-page"><div class="auth-card glass">
+  <p class="eyebrow">RSA · {{ status }}</p>
+  <h1>{% if status == 404 %}Not found{% elif status == 403 %}No access{% elif status >= 500 %}Something broke{% else %}Can't do that{% endif %}</h1>
+  <p>{{ message }}</p>
+  <div class="row mt"><a class="btn primary" href="{{ url_for('home') }}">Go to my workspace</a><a class="btn ghost" href="javascript:history.back()">Back</a></div>
+</div></section>
+{% endblock %}

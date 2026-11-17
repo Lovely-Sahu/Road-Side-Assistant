@@ -1,0 +1,4 @@
+# Production: web app + a production WSGI server.
+-r requirements-web.txt
+waitress>=3.0,<4          # Windows-friendly WSGI server (used by wsgi.py)
+gunicorn>=22,<24; sys_platform != "win32"   # optional on Linux

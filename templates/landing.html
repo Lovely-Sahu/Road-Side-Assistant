@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block title %}Home{% endblock %}{% block content %}
+<section class="landing hero-grid">
+<div class="hero-copy"><p class="eyebrow">AI-POWERED · REAL-TIME · ROLE-BASED</p><h1>Help arrives<br><span>when it matters.</span></h1><p>Report a vehicle problem, let RSA analyze the incident, match assistance, and track the response from one professional workspace.</p><div class="hero-actions"><a class="btn primary big" href="{{ url_for('register') }}">Get roadside help</a><a class="btn ghost big" href="{{ url_for('login') }}">Open dashboard</a></div></div>
+<div class="network-card glass"><div class="card-label">● RSA RESPONSE NETWORK</div><div class="ai-status"><span>✦</span><div><b>AI incident analysis</b><small>Severity · Safety · Service</small></div><strong>READY</strong></div><div class="radar"><span></span><span></span><span></span><span></span><div class="route-line"></div></div><div class="mini-grid"><div><small>Detection</small><b>8 incident<br>types</b></div><div><small>Workflow</small><b>Request →<br>Resolve</b></div></div></div>
+</section>
+<section class="feature-strip"><div><b>01</b><span>AI diagnosis</span><small>Plain-language incident analysis</small></div><div><b>02</b><span>Smart matching</span><small>Availability + service + distance</small></div><div><b>03</b><span>Live tracking</span><small>Provider status and shared location</small></div><div><b>04</b><span>Safety first</span><small>Risk-aware escalation</small></div></section>
+{% endblock %}

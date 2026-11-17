@@ -1,0 +1,31 @@
+{% extends 'base.html' %}{% block title %}Reports{% endblock %}{% block content %}
+{% set r = report %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">REPORTING</p><h1>Operational reports.</h1><p>Computed from stored requests, tracking history, matches and feedback. Small samples are labelled; no figures are estimated.</p></div>
+
+  <div class="stat-row wide">
+    <div class="stat glass"><small>Avg time to assignment</small><b>{{ r['response']['assign_minutes'] if r['response']['assign_minutes'] is not none else '—' }}{% if r['response']['assign_minutes'] is not none %} min{% endif %}</b><span class="def">Request created → first ASSIGNED event · {{ r['response']['n'] }} request(s)</span></div>
+    <div class="stat glass"><small>Avg time to arrival</small><b>{{ r['response']['arrive_minutes'] if r['response']['arrive_minutes'] is not none else '—' }}{% if r['response']['arrive_minutes'] is not none %} min{% endif %}</b><span class="def">Request created → first ARRIVED event · {{ r['response']['arrived_samples'] }} request(s)</span></div>
+    <div class="stat glass"><small>Completion rate</small><b>{{ r['completion']['rate'] if r['completion']['rate'] is not none else '—' }}{% if r['completion']['rate'] is not none %}%{% endif %}</b><span class="def">Completed ÷ (completed + cancelled) · {{ r['completion']['completed'] }} / {{ r['completion']['completed'] + r['completion']['cancelled'] }} · {{ r['completion']['open'] }} still open</span></div>
+    <div class="stat glass"><small>Assignment failures</small><b>{{ r['failures']['currently_unassigned'] }} waiting</b><span class="def">{{ r['failures']['requests_never_matched'] }} never matched · {{ r['failures']['no_provider_events'] }} hit "no eligible provider" · {{ r['failures']['rejections'] }} rejections · {{ r['failures']['unable_to_complete'] }} unable · {{ r['failures']['admin_reassignments'] }} admin reassignments</span></div>
+  </div>
+
+  <div class="panel glass mt">
+    <div class="card-label">PROVIDER PERFORMANCE</div>
+    <div class="table-wrap mt"><table class="data">
+      <thead><tr><th>Provider</th><th>Service</th><th>Assigned</th><th>Completed</th><th>Rejected</th><th>Unable</th><th>Driver feedback</th><th>Profile rating</th></tr></thead>
+      <tbody>{% for p in r['providers'] %}<tr>
+        <td>{{ p['business_name'] }}</td><td>{{ p['service_type'] }}</td><td>{{ p['assigned'] }}</td><td>{{ p['completed'] or 0 }}</td><td>{{ p['rejected'] or 0 }}</td><td>{{ p['unable'] or 0 }}</td>
+        <td>{% if p['feedback_count'] %}★ {{ p['feedback_avg'] }} ({{ p['feedback_count'] }}){% else %}—{% endif %}</td><td>{{ p['rating'] or 'Unrated' }}</td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+
+  <div class="panel glass mt">
+    <div class="card-label">INCIDENT CATEGORIES</div>
+    <div class="table-wrap mt"><table class="data">
+      <thead><tr><th>Incident</th><th>Priority</th><th>Requests</th></tr></thead>
+      <tbody>{% for i in r['incidents'] %}<tr><td>{{ i['incident_type']|label }}</td><td><span class="badge {{ i['priority']|lower }}">{{ i['priority'] }}</span></td><td>{{ i['n'] }}</td></tr>{% else %}<tr><td colspan="3" class="empty">No requests yet.</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+</section>{% endblock %}

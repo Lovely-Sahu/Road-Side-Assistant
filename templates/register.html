@@ -1,0 +1,15 @@
+{% extends 'base.html' %}{% block title %}Create account{% endblock %}{% block content %}
+<section class="auth-page"><div class="auth-card glass wide"><p class="eyebrow">CREATE YOUR RSA IDENTITY</p><h1>Create your account.</h1><p>Choose a driver or provider workspace.</p>
+<form method="post" id="register-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="form-grid">
+  <label>Full name<input name="name" required minlength="2" maxlength="100" autocomplete="name" placeholder="Your name" value="{{ request.form.get('name','') }}"></label>
+  <label>Email<input name="email" type="email" required autocomplete="email" placeholder="you@example.com" value="{{ request.form.get('email','') }}"></label>
+  <label>Phone<input name="phone" id="phone" autocomplete="tel" placeholder="+91 98765 43210" value="{{ request.form.get('phone','') }}"></label>
+  <label>Account type<select name="role" id="role"><option value="driver">Driver</option><option value="provider" {% if request.form.get('role')=='provider' %}selected{% endif %}>Provider</option></select></label>
+  <label class="provider-only">Business name<input name="business_name" maxlength="120" placeholder="City Roadside Services" value="{{ request.form.get('business_name','') }}"></label>
+  <label class="provider-only">Service type<select name="service_type">{% for value,label in service_types %}<option value="{{ value }}" {% if request.form.get('service_type')==value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+  <p class="provider-only full notice info small">Provider accounts are reviewed by an administrator before they receive jobs. You can share your live location from your dashboard after signing in.</p>
+  <label class="full">Password<input name="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Minimum 8 characters"></label>
+</div>
+<button class="btn primary big" type="submit">Create account</button></form></div></section>{% endblock %}
+{% block scripts %}<script>const r=document.querySelector('#role');const p=document.querySelectorAll('.provider-only');const phone=document.querySelector('#phone');function t(){const prov=r.value==='provider';p.forEach(x=>x.style.display=prov?'block':'none');phone.required=prov;document.querySelector('[name=business_name]').required=prov;}r.addEventListener('change',t);t();</script>{% endblock %}

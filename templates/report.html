@@ -1,0 +1,151 @@
+{% extends 'base.html' %}{% block title %}Report Incident{% endblock %}{% block content %}
+<section class="page report-page">
+  <div class="page-title"><p class="eyebrow">AI INCIDENT REPORT</p><h1>Tell us what happened.</h1><p>Describe the problem in plain language. RSA estimates severity, safety and the right service.</p></div>
+
+  {% if active %}
+    <div class="notice warn"><b>You already have an active request (#{{ active['id'] }}, {{ status_label(active['status'])|lower }}).</b> Only one request can be open at a time. <a href="{{ url_for('tracking', request_id=active['id']) }}">Track or cancel it →</a></div>
+  {% endif %}
+  <div class="notice danger small"><b>Danger to life?</b> If anyone is injured, there are flames, or you smell fuel, move away from the vehicle and call <b>112</b> first.</div>
+
+  <div class="report-layout">
+    <div class="panel glass">
+      <label>Vehicle<select id="vehicle_id"><option value="">Select vehicle (optional)</option>{% for v in vehicles %}<option value="{{ v['id'] }}">{{ v['registration_number'] }} · {{ v['make'] or '' }} {{ v['model'] or '' }}</option>{% endfor %}</select></label>
+      <label>What happened?<textarea id="description" rows="6" maxlength="2000" placeholder="Example: My car stopped while driving and smoke is coming from the engine."></textarea></label>
+
+      <div class="analysis-preview" aria-live="polite">
+        <div class="analysis-head"><span aria-hidden="true">✦</span><div><b>AI analysis preview</b><small>A prediction from your words — not a confirmed diagnosis</small></div><em id="ai-state">WAITING</em></div>
+        <div class="analysis-grid">
+          <div><small>Problem</small><b id="problem">—</b></div>
+          <div><small>Severity</small><b id="severity">—</b></div>
+          <div><small>Safe to drive</small><b id="safe">—</b></div>
+          <div><small>Service</small><b id="service">—</b></div>
+        </div>
+        <p class="confidence-note" id="confidence-note"></p>
+        <p class="small muted" id="ml-check"></p>
+        <div id="hazards"></div>
+        <div id="followups"></div>
+        <div id="safety"></div>
+        <label id="confirm-wrap" hidden>Is this the right problem?
+          <select id="incident_type"><option value="">Yes — use the AI result</option>{% for value,label in supported_problems %}<option value="{{ value }}">No — it is: {{ label }}</option>{% endfor %}</select>
+          <small class="muted">Correcting the type changes which service is matched. Hazards you described (smoke, fire, fuel, injury) are always kept.</small>
+        </label>
+        <p class="small muted" id="preview"></p>
+      </div>
+
+      <label>Photos (optional, up to {{ max_photos }}, JPEG/PNG/WebP, max {{ max_upload_mb }} MB each)
+        <input type="file" id="photos" accept="image/jpeg,image/png,image/webp" multiple>
+        <small class="muted">Photos are shared with your assigned provider. They are not analysed automatically and cannot prove a mechanical fault.</small>
+      </label>
+
+      <div class="location-row"><button class="btn ghost" id="locate" type="button">⌖ Use my location</button><span id="loc-status">Location not shared — providers will need to call you for directions.</span></div>
+      <div class="report-actions"><button class="btn primary big" id="analyze" type="button">Analyze incident ✦</button><button class="btn danger big" id="request" type="button" disabled {% if active %}title="You already have an active request"{% endif %}>Request assistance →</button></div>
+      <div id="result" role="status" aria-live="polite"></div>
+    </div>
+    <aside class="panel glass explain">
+      <div class="card-label">RSA DECISION LAYER</div>
+      <div class="step active"><b>01</b><span>Incident analysis<small>Problem, severity, evidence</small></span></div>
+      <div class="step"><b>02</b><span>Safety assessment<small>Hazards, drive / stop / tow</small></span></div>
+      <div class="step"><b>03</b><span>Service matching<small>Suitability, distance, rating, workload</small></span></div>
+      <div class="step"><b>04</b><span>Live response<small>Status, location, completion</small></span></div>
+    </aside>
+  </div>
+</section>{% endblock %}
+{% block scripts %}<script>
+(function(){
+  const $ = (s) => document.querySelector(s);
+  const desc = $('#description'), analyzeBtn = $('#analyze'), req = $('#request'), result = $('#result');
+  const hasActive = {{ 'true' if active else 'false' }};
+  const maxPhotos = {{ max_photos }}, maxBytes = {{ max_upload_mb }} * 1024 * 1024;
+  let last = null, lat = '', lon = '', timer = null, inflight = 0;
+
+  function list(items){ return '<ul class="steps-list">' + items.map(i => '<li>' + RSA.esc(i) + '</li>').join('') + '</ul>'; }
+
+  async function runAnalysis(){
+    const d = desc.value.trim();
+    if (d.length < 5) { result.textContent = 'Describe the problem first (at least 5 characters).'; return; }
+    const ticket = ++inflight;
+    $('#ai-state').textContent = 'ANALYZING'; analyzeBtn.disabled = true;
+    const form = {description: d, incident_type: $('#incident_type').value};
+    if (lat !== '') { form.latitude = lat; form.longitude = lon; }
+    const res = await RSA.api('/api/analyze', {method:'POST', form});
+    analyzeBtn.disabled = false;
+    if (ticket !== inflight) return; // a newer analysis is running
+    if (!res.ok) { $('#ai-state').textContent = 'ERROR'; result.textContent = res.data.message; return; }
+    result.textContent = '';
+    last = res.data;
+    const a = last.analysis, m = last.matching, dg = last.diagnosis;
+    $('#problem').textContent = a.problem_label;
+    $('#severity').textContent = a.severity;
+    $('#safe').textContent = a.safety_assessment === 'NOT_CONFIRMED' ? 'Not confirmed' : (a.safe_to_drive ? 'Likely, with caution' : 'NO');
+    $('#service').textContent = m.service_name;
+    $('#confidence-note').textContent = a.problem === 'unknown' ? 'No specific problem recognised. Answer the questions below to help.' :
+      (a.decision_source === 'ml' ? 'ML probability ' + Math.round(a.confidence * 100) + '%. ' :
+       'Match strength ' + Math.round(a.confidence * 100) + '% (' + (a.evidence_source === 'phrase' ? 'clear phrase match' : 'inferred from related words') + '). ') + a.confidence_basis;
+    const ml = a.ml, decided = {rules: 'type decided by the rules', ml: 'type decided by machine learning', 'rules+ml': 'rules and ML combined', none: 'type not identified'};
+    $('#ml-check').innerHTML = ml && ml.available ?
+      '<b>ML check:</b> Logistic Regression → ' + RSA.esc(ml.logistic_regression.label) + ' (' + Math.round(ml.logistic_regression.probability * 100) + '%)' +
+      ' · Random Forest → ' + RSA.esc(ml.random_forest.label) + ' (' + Math.round(ml.random_forest.probability * 100) + '%)' +
+      (ml.logistic_regression.top_words.length ? ' · key words: ' + ml.logistic_regression.top_words.map(RSA.esc).join(', ') : '') +
+      ' · <b>' + RSA.esc(decided[a.decision_source] || '') + '</b>' :
+      (ml ? 'ML check not available — the rules were used alone.' : '');
+    $('#hazards').innerHTML = a.hazards.length ? '<div class="notice danger"><b>Hazards detected:</b> ' + a.hazards.map(h => RSA.esc(h.hazard.replace('_',' '))).join(', ') + '</div>' : '';
+    $('#followups').innerHTML = a.follow_up_questions.length ?
+      '<div class="notice info"><b>' + (a.problem === 'unknown' ? 'Help RSA understand:' : 'To be more certain:') + '</b> tap a question to add it to your description, type the answer, then analyze again.<div class="chips">' +
+      a.follow_up_questions.map(q => '<button type="button" class="chip" data-q="' + RSA.esc(q) + '">' + RSA.esc(q) + '</button>').join('') + '</div></div>' : '';
+    document.querySelectorAll('[data-q]').forEach(c => c.onclick = () => { desc.value = desc.value.trim() + '\n' + c.dataset.q + ' '; desc.focus(); });
+    $('#safety').innerHTML = '<div class="notice ' + (a.safe_to_drive ? 'info' : 'warn') + '"><b>What to do now</b>' + list(dg.safety_steps) +
+      (dg.recommend_towing ? '<p class="small">Towing / professional recovery is recommended.</p>' : '') +
+      (dg.emergency_number_note ? '<p class="small"><b>' + RSA.esc(dg.emergency_number_note) + '</b></p>' : '') +
+      '<p class="small muted">' + RSA.esc(dg.disclaimer) + '</p></div>';
+    $('#confirm-wrap').hidden = false;
+    const p = last.provider_preview;
+    $('#preview').textContent = p ? (p.eligible ? p.eligible + ' suitable provider(s) free right now' + (p.location_used ? ' within range.' : ' (share location for distance-based matching).') : 'No suitable provider is free right now — your request will still be saved and assigned when one is available.') : '';
+    $('#ai-state').textContent = 'READY';
+    req.disabled = hasActive;
+    document.querySelectorAll('.step').forEach((x,i) => x.classList.toggle('active', i < 3));
+  }
+
+  analyzeBtn.addEventListener('click', runAnalysis);
+  $('#incident_type').addEventListener('change', runAnalysis);
+  desc.addEventListener('input', () => { clearTimeout(timer); req.disabled = true; if (desc.value.trim().length > 12) timer = setTimeout(runAnalysis, 600); });
+
+  $('#locate').onclick = () => {
+    const status = $('#loc-status');
+    if (!navigator.geolocation) { status.textContent = 'Geolocation is not available in this browser.'; return; }
+    status.textContent = 'Locating…';
+    navigator.geolocation.getCurrentPosition(p => {
+      lat = p.coords.latitude; lon = p.coords.longitude;
+      status.textContent = 'Location captured (±' + Math.round(p.coords.accuracy) + ' m) · ' + lat.toFixed(4) + ', ' + lon.toFixed(4);
+      if (last) runAnalysis();
+    }, err => {
+      status.textContent = err.code === 1 ? 'Location permission denied — you can still request help without it.' : 'Could not get your location (' + RSA.esc(err.message) + ').';
+    }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 60000});
+  };
+
+  req.onclick = async () => {
+    if (!last) return;
+    const files = Array.from($('#photos').files || []);
+    if (files.length > maxPhotos) { result.textContent = 'Please choose at most ' + maxPhotos + ' photos.'; return; }
+    const tooBig = files.find(f => f.size > maxBytes);
+    if (tooBig) { result.textContent = RSA.esc(tooBig.name) + ' is larger than the size limit.'; return; }
+    if (!confirm('Send this assistance request now?')) return;
+    req.disabled = true; req.textContent = 'Matching providers…';
+    const form = {description: desc.value.trim(), vehicle_id: $('#vehicle_id').value, incident_type: $('#incident_type').value};
+    if (lat !== '') { form.latitude = lat; form.longitude = lon; }
+    const res = await RSA.api('/api/assistance/create', {method:'POST', form});
+    if (!res.ok) {
+      result.innerHTML = '<div class="notice danger">' + RSA.esc(res.data.message) + (res.data.redirect ? ' <a href="' + RSA.esc(res.data.redirect) + '">Open it →</a>' : '') + '</div>';
+      req.disabled = false; req.textContent = 'Request assistance →'; return;
+    }
+    let failed = 0;
+    for (const f of files) {
+      req.textContent = 'Uploading photos…';
+      const fd = new FormData(); fd.append('photo', f);
+      const up = await RSA.api('/api/requests/' + res.data.request_id + '/attachments', {method:'POST', form: fd});
+      if (!up.ok) failed++;
+    }
+    if (failed) { try { sessionStorage.setItem('rsa-photo-warning', failed + ' photo(s) could not be uploaded.'); } catch (e) {} }
+    window.location = res.data.redirect;
+  };
+})();
+</script>{% endblock %}

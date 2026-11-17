@@ -1,0 +1,112 @@
+{% extends 'base.html' %}{% block title %}Request #{{ item['id'] }}{% endblock %}
+{% block head %}{% include 'partials/leaflet.html' %}{% endblock %}
+{% block content %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">REQUEST #{{ item['id'] }}</p><h1>{{ item['incident_label'] }}.</h1>
+    <p><em class="status {{ item['status']|lower }}">{{ item['status_label'] }}</em> · <span class="badge {{ item['priority']|lower }}">{{ item['priority'] }}</span> · {{ item['recommended_service']|service_name }} · created {{ item['created_at']|utc }} · updated {{ item['updated_at']|utc }}</p></div>
+
+  <div class="grid-2 mt">
+    <div class="panel glass">
+      <div class="card-label">DRIVER &amp; INCIDENT</div>
+      <dl class="kv mt">
+        <dt>Driver</dt><dd>{{ item['driver_name'] }}{% if item['driver_phone'] %} · {{ item['driver_phone'] }}{% endif %}</dd>
+        <dt>Vehicle</dt><dd>{% if item['registration_number'] %}{{ item['registration_number'] }} · {{ item['make'] or '' }} {{ item['model'] or '' }}{% else %}Not selected{% endif %}</dd>
+        <dt>Description</dt><dd>{{ item['description'] }}</dd>
+        <dt>AI type</dt><dd>{{ (item['ai_incident_type'] or item['incident_type'])|label }}{% if item['ai_incident_type'] and item['ai_incident_type'] != item['incident_type'] %} <span class="badge pending">driver corrected to {{ item['incident_type']|label }}</span>{% endif %}</dd>
+        <dt>Safe to drive</dt><dd>{{ 'Yes (with caution)' if item['safe_to_drive'] else 'No / not confirmed' }}</dd>
+        <dt>Escalation flag</dt><dd>{{ 'Yes' if item['escalation'] else 'No' }}</dd>
+        <dt>Location</dt><dd>{% if item['latitude'] is not none %}{{ '%.5f'|format(item['latitude']) }}, {{ '%.5f'|format(item['longitude']) }}{% else %}Not shared{% endif %}</dd>
+      </dl>
+      {% if reanalysis %}
+        <div class="notice warn mt"><b>Legacy record:</b> stored as "unknown" by the previous analyzer. The current engine reads this description as <b>{{ reanalysis['problem_label'] }}</b> ({{ reanalysis['severity'] }}, hazards: {{ reanalysis['hazards']|map(attribute='hazard')|join(', ') or 'none' }}). Shown for review only, the stored record is not changed.</div>
+      {% endif %}
+      {% if view['diagnosis'] %}
+        <div class="notice info mt"><b>Diagnosis (prediction): {{ view['diagnosis']['diagnosis'] }}</b> · {{ view['diagnosis']['severity'] }}{% if view['diagnosis']['confidence'] is not none %} · match strength {{ (view['diagnosis']['confidence'] * 100)|round|int }}%{% endif %}
+          <p>{{ view['diagnosis']['explanation'] }}</p>
+          {% if view['diagnosis']['details'] and view['diagnosis']['details']['evidence'] %}<p class="small">Evidence: {{ view['diagnosis']['details']['evidence']|join(', ') }}</p>{% endif %}
+          {% if view['diagnosis']['details'] and view['diagnosis']['details']['hazards'] %}<p class="small">Hazards: {{ view['diagnosis']['details']['hazards']|join(', ') }}</p>{% endif %}
+          {% set mlc = view['diagnosis']['details']['ml'] if view['diagnosis']['details'] else None %}{% if mlc %}<p class="small">ML check: Logistic Regression → {{ mlc['logistic_regression']['label'] or mlc['logistic_regression']['problem'] }} ({{ (mlc['logistic_regression']['probability'] * 100)|round|int }}%), Random Forest → {{ mlc['random_forest']['label'] or mlc['random_forest']['problem'] }} ({{ (mlc['random_forest']['probability'] * 100)|round|int }}%){% if view['diagnosis']['details']['decision_source'] == 'ml' %} · type decided by ML{% endif %}</p>{% endif %}
+        </div>
+      {% endif %}
+      {% if attachments %}<div class="photo-grid">{% for a in attachments %}<a href="{{ a['url'] }}" target="_blank" rel="noopener"><img src="{{ a['url'] }}" alt="Attachment" loading="lazy"></a>{% endfor %}</div>{% endif %}
+    </div>
+    <div class="panel glass">
+      <div id="map" class="live-map" style="height:300px"></div>
+      <p class="small muted mt">Driver location (D) and the assigned provider's last shared location (P), if any.</p>
+      <a class="btn small ghost" href="{{ url_for('tracking', request_id=item['id']) }}">Open live tracking view →</a>
+    </div>
+  </div>
+
+  <div class="panel glass mt">
+    <div class="card-label">MATCHING &amp; ASSIGNMENT HISTORY</div>
+    <div class="table-wrap mt"><table class="data">
+      <thead><tr><th>Match</th><th>Provider</th><th>Score</th><th>Distance</th><th>Status</th><th>Reason / notes</th><th>Created</th><th>Updated</th></tr></thead>
+      <tbody>{% for m in matches %}<tr>
+        <td>#{{ m['id'] }}</td><td>{{ m['business_name'] }}<small>{{ m['service_type'] }}</small></td>
+        <td>{{ m['match_score'] }}{% if m['match_details'] %}<small>suit. {{ m['match_details']['suitability_points'] }} · dist. {{ m['match_details']['distance_points'] }} · rating {{ m['match_details']['rating_points'] }}</small>{% else %}<small>legacy score</small>{% endif %}</td>
+        <td>{{ m['distance_km'] if m['distance_km'] is not none else '—' }}</td>
+        <td><em class="status {{ m['status']|lower }}">{{ status_label(m['status']) }}</em></td>
+        <td><small>{{ m['status_reason'] or '' }}</small></td>
+        <td>{{ m['created_at']|utc }}</td><td>{{ m['updated_at']|utc }}</td>
+      </tr>{% else %}<tr><td colspan="8" class="empty">Never matched.</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+
+  {% if item['status'] in ('REQUESTED','ASSIGNED','ACCEPTED','ON_THE_WAY','ARRIVED') %}
+  <div class="grid-2 mt">
+    <div class="panel glass">
+      <div class="card-label">CONTROLLED REASSIGNMENT</div>
+      {% if candidates %}
+        <form method="post" action="{{ url_for('admin_request_reassign', request_id=item['id']) }}" data-confirm="Reassign this request? The current provider (if any) will be released.">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <label>Provider<select name="provider_id"><option value="">Best eligible (automatic)</option>{% for c in candidates %}<option value="{{ c['provider']['id'] }}">{{ c['provider']['business_name'] }} — {{ c['provider']['service_type'] }} · score {{ c['score'] }} · {{ c['distance_km'] if c['distance_km'] is not none else '?' }} km</option>{% endfor %}</select></label>
+          <label>Reason (recorded in the audit log)<input name="reason" required minlength="3" maxlength="300" placeholder="e.g. provider not responding"></label>
+          <button class="btn primary" type="submit">Reassign</button>
+        </form>
+      {% else %}
+        <div class="notice warn">No eligible provider is available for this request right now.</div>
+      {% endif %}
+      {% if item['status'] == 'REQUESTED' %}
+        <form method="post" action="{{ url_for('admin_request_retry', request_id=item['id']) }}" class="mt"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn ghost" type="submit">Retry automatic matching</button></form>
+      {% endif %}
+      {% if excluded %}
+        <details class="mt"><summary class="small muted">Why other providers are not eligible ({{ excluded|length }})</summary>
+          <ul class="steps-list small">{% for e in excluded %}<li>{{ e['business_name'] }}: {{ e['reason'] }}</li>{% endfor %}</ul></details>
+      {% endif %}
+    </div>
+    <div class="panel glass">
+      <div class="card-label">CANCEL REQUEST</div>
+      <form method="post" action="{{ url_for('admin_request_cancel', request_id=item['id']) }}" data-confirm="Cancel this request for the driver?" class="mt">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Reason<input name="reason" maxlength="300" placeholder="e.g. duplicate request, driver confirmed resolved"></label>
+        <button class="btn danger" type="submit">Cancel request</button>
+      </form>
+    </div>
+  </div>
+  {% elif item['status'] == 'IN_PROGRESS' %}
+    <div class="panel glass mt">
+      <div class="notice info">Service is in progress, so the request cannot be reassigned. The provider can mark it unable to complete, which reassigns it automatically.</div>
+      <form method="post" action="{{ url_for('admin_request_cancel', request_id=item['id']) }}" data-confirm="Cancel a request that is in progress?" class="mt"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Reason<input name="reason" required minlength="3" maxlength="300"></label><button class="btn danger" type="submit">Cancel request</button></form>
+    </div>
+  {% endif %}
+
+  <div class="panel glass mt">
+    <div class="card-label">FULL TRACKING HISTORY</div>
+    <div class="table-wrap mt"><table class="data">
+      <thead><tr><th>#</th><th>Time</th><th>Status</th><th>Provider</th><th>Location</th><th>Source</th><th>Notes</th></tr></thead>
+      <tbody>{% for t in history %}<tr>
+        <td>{{ t['id'] }}</td><td>{{ t['updated_at']|utc }}</td><td>{{ status_label(t['status']) }}</td><td>{{ t['provider_id'] or '—' }}</td>
+        <td>{% if t['latitude'] is not none %}{{ '%.4f'|format(t['latitude']) }}, {{ '%.4f'|format(t['longitude']) }}{% else %}—{% endif %}</td>
+        <td>{{ t['location_source'] or ('unknown (legacy)' if t['latitude'] is not none else '—') }}</td><td><small>{{ t['notes'] or '' }}</small></td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+</section>{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tracking-map.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const map = new RSATrackMap(document.querySelector('#map'), {{ map_config|tojson }});
+  map.update({{ view['driver_location']|tojson }}, {{ view['provider_location']|tojson }}, {driver: 'Driver location', provider: 'Provider (last shared)'});
+});
+</script>{% endblock %}

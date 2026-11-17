@@ -1,0 +1,25 @@
+{% extends 'base.html' %}{% block title %}Users{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">USER MANAGEMENT</p><h1>Accounts.</h1><p>Activate or deactivate accounts. Deactivated users are signed out on their next request. You cannot deactivate yourself or the last active administrator.</p></div>
+  <div class="row mt">
+    <a class="btn small {{ 'primary' if not role else 'ghost' }}" href="{{ url_for('admin_users') }}">All</a>
+    {% for r in ['driver','provider','admin'] %}<a class="btn small {{ 'primary' if role == r else 'ghost' }}" href="{{ url_for('admin_users', role=r) }}">{{ r|title }}s</a>{% endfor %}
+  </div>
+  <div class="panel glass mt"><div class="table-wrap"><table class="data">
+    <thead><tr><th>#</th><th>Name</th><th>Email / phone</th><th>Role</th><th>Status</th><th>Created</th><th>Requests</th><th></th></tr></thead>
+    <tbody>{% for u in users %}<tr>
+      <td>{{ u['id'] }}</td>
+      <td>{{ u['name'] }}{% if u['business_name'] %}<small>{{ u['business_name'] }}</small>{% endif %}</td>
+      <td>{{ u['email'] }}<small>{{ u['phone'] or '' }}</small></td>
+      <td>{{ u['role']|title }}</td>
+      <td><span class="badge {{ 'active' if u['is_active'] else 'inactive' }}">{{ 'Active' if u['is_active'] else 'Inactive' }}</span></td>
+      <td>{{ u['created_at']|utc }}</td>
+      <td>{{ u['request_count'] }}</td>
+      <td>{% if u['id'] != current_user['id'] %}
+        <form method="post" action="{{ url_for('admin_user_status', user_id=u['id']) }}" data-confirm="{{ ('Deactivate ' if u['is_active'] else 'Activate ') ~ u['name'] ~ '?' }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="active" value="{{ 0 if u['is_active'] else 1 }}">
+          <button class="btn small {{ 'danger' if u['is_active'] else 'success' }}" type="submit">{{ 'Deactivate' if u['is_active'] else 'Activate' }}</button>
+        </form>{% else %}<span class="small muted">You</span>{% endif %}</td>
+    </tr>{% else %}<tr><td colspan="8" class="empty">No users.</td></tr>{% endfor %}</tbody>
+  </table></div></div>
+</section>{% endblock %}

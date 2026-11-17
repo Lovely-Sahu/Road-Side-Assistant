@@ -1,0 +1,8 @@
+{
+    "success": true,
+    "accuracy": 0.9062,
+    "accuracy_percentage": 90.62,
+    "correct_predictions": 29,
+    "total_predictions": 32,
+    "status": "GOOD"
+}

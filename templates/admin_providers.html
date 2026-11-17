@@ -1,0 +1,27 @@
+{% extends 'base.html' %}{% block title %}Providers{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">PROVIDER MANAGEMENT</p><h1>Providers.</h1><p>Verify providers, manage availability and check performance. Only <b>approved</b>, <b>available</b> providers that have a <b>login account</b> and no active job are dispatched automatically.</p></div>
+  <div class="panel glass mt"><div class="table-wrap"><table class="data">
+    <thead><tr><th>#</th><th>Business</th><th>Service</th><th>Location</th><th>Verification</th><th>Availability</th><th>Rating</th><th>Jobs</th><th>Login</th><th>Actions</th></tr></thead>
+    <tbody>{% for p in providers %}<tr>
+      <td>{{ p['id'] }}</td>
+      <td>{{ p['business_name'] }}<small>{{ p['phone'] or '' }}</small></td>
+      <td>{{ p['service_type'] }}<small>{% if p['category_known'] %}category: {{ p['category'] }}{% else %}<span class="badge rejected">unrecognised category</span>{% endif %}</small></td>
+      <td>{% if p['location_valid'] %}{{ '%.4f'|format(p['latitude']) }}, {{ '%.4f'|format(p['longitude']) }}<small>{% if p['location_updated_at'] %}updated {{ p['location_updated_at']|utc }}{% else %}registered base location{% endif %}</small>{% else %}<span class="badge pending">missing</span><small>distance unknown in matching</small>{% endif %}</td>
+      <td><span class="badge {{ p['verification_status'] }}">{{ p['verification_status'] }}</span></td>
+      <td>{{ p['availability']|title }}{% if p['jobs_active'] %}<small>{{ p['jobs_active'] }} active job</small>{% endif %}</td>
+      <td>{{ p['rating'] or 'Unrated' }}<small>{{ p['feedback_count'] }} review(s)</small></td>
+      <td>{{ p['jobs_total'] }}<small>{{ p['jobs_completed'] }} done · {{ p['jobs_failed'] }} rejected/unable</small></td>
+      <td>{% if p['user_id'] %}{{ p['user_email'] }}{% if not p['user_is_active'] %} <span class="badge inactive">inactive</span>{% endif %}{% else %}<span class="badge pending">no login</span>
+        {% if linkable %}<form method="post" action="{{ url_for('admin_provider_link', provider_id=p['id']) }}" class="row mt"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><select name="user_id" aria-label="Link account">{% for u in linkable %}<option value="{{ u['id'] }}">{{ u['name'] }} ({{ u['email'] }})</option>{% endfor %}</select><button class="btn small" type="submit">Link</button></form>{% else %}<small>not dispatchable — no unlinked provider accounts to link</small>{% endif %}{% endif %}</td>
+      <td>
+        <div class="row">
+        {% for decision, cls in [('approved','success'),('rejected','danger')] %}{% if p['verification_status'] != decision %}
+          <form method="post" action="{{ url_for('admin_provider_verification', provider_id=p['id']) }}" data-confirm="{{ decision|title }} {{ p['business_name'] }}?{{ ' Active jobs will be reassigned.' if decision == 'rejected' else '' }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="decision" value="{{ decision }}"><button class="btn small {{ cls }}" type="submit">{{ 'Approve' if decision == 'approved' else 'Reject' }}</button></form>
+        {% endif %}{% endfor %}
+          <form method="post" action="{{ url_for('admin_provider_availability', provider_id=p['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="availability" value="{{ 'offline' if p['availability'] in ('available','busy') else 'available' }}"><button class="btn small ghost" type="submit">Set {{ 'offline' if p['availability'] in ('available','busy') else 'available' }}</button></form>
+        </div>
+      </td>
+    </tr>{% else %}<tr><td colspan="10" class="empty">No providers.</td></tr>{% endfor %}</tbody>
+  </table></div></div>
+</section>{% endblock %}

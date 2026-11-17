@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% block title %}Notifications{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title row"><div class="spacer"><p class="eyebrow">NOTIFICATIONS</p><h1>Updates.</h1><p>Events from your requests and jobs, newest first.</p></div>
+    {% if items %}<form method="post" action="{{ url_for('api_notifications_read') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn ghost" type="submit">Mark all read</button></form>{% endif %}
+  </div>
+  <div class="panel glass mt">
+    <ul class="list-plain">
+    {% for n in items %}
+      <li class="notif {{ 'unread' if not n['is_read'] }}">
+        <div class="row"><b class="spacer">{{ n['title'] }}</b>{{ n['created_at']|utc }}</div>
+        <div class="muted">{{ n['message'] }}</div>
+        {% if n['request_id'] %}<a class="small" href="{{ url_for('tracking', request_id=n['request_id']) if current_user['role'] != 'admin' else url_for('admin_request_detail', request_id=n['request_id']) }}">Open request #{{ n['request_id'] }} →</a>{% endif %}
+      </li>
+    {% else %}<li class="empty">No notifications yet.</li>{% endfor %}
+    </ul>
+  </div>
+</section>{% endblock %}

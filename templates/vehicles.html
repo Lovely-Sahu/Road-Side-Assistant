@@ -1,0 +1,63 @@
+{% extends 'base.html' %}{% block title %}Vehicles{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">VEHICLE GARAGE</p><h1>Your vehicles.</h1><p>Keep vehicle identity connected to every assistance request.</p></div>
+  <div class="two-col">
+    <div class="panel glass">
+      <h2 id="form-title">Add vehicle</h2>
+      <form id="vehicle-form" novalidate>
+        <input type="hidden" name="vehicle_id" value="">
+        <div class="form-grid">
+          <label>Registration<input name="registration_number" required minlength="4" maxlength="20" placeholder="OD 02 AB 1234"></label>
+          <label>Make<input name="make" maxlength="60" placeholder="Hyundai"></label>
+          <label>Model<input name="model" maxlength="60" placeholder="i20"></label>
+          <label>Year<input name="year" type="number" min="1950" max="{{ current_year + 1 }}" placeholder="2024"></label>
+          <label>Fuel type<select name="fuel_type"><option value="">Select</option>{% for f in ['Petrol','Diesel','CNG','Electric','Hybrid','LPG'] %}<option>{{ f }}</option>{% endfor %}</select></label>
+        </div>
+        <div class="row"><button class="btn primary" type="submit" id="save-btn">Add vehicle</button><button class="btn ghost" type="button" id="cancel-edit" hidden>Cancel edit</button></div>
+        <div id="vehicle-msg" class="mt" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+    <div class="panel glass">
+      <h2>Registered vehicles</h2>
+      {% for v in vehicles %}
+        <div class="vehicle-card">
+          <div class="car-icon" aria-hidden="true">▰</div>
+          <div class="spacer"><b>{{ v['make'] or 'Vehicle' }} {{ v['model'] or '' }}</b><small>{{ v['registration_number'] }} · {{ v['fuel_type'] or 'Fuel N/A' }}{% if v['year'] %} · {{ v['year'] }}{% endif %} · {{ v['request_count'] }} request(s)</small></div>
+          <button class="btn small ghost" type="button" data-edit='{{ {"id": v["id"], "registration_number": v["registration_number"], "make": v["make"] or "", "model": v["model"] or "", "year": v["year"] or "", "fuel_type": v["fuel_type"] or ""}|tojson|forceescape }}'>Edit</button>
+          {% if v['request_count'] == 0 %}<button class="btn small danger" type="button" data-delete="{{ v['id'] }}" data-reg="{{ v['registration_number'] }}">Remove</button>{% else %}<span class="small muted" title="Kept to preserve service history">Has history</span>{% endif %}
+        </div>
+      {% else %}<div class="empty">No vehicles registered.</div>{% endfor %}
+    </div>
+  </div>
+</section>{% endblock %}
+{% block scripts %}<script>
+(function(){
+  const form = document.querySelector('#vehicle-form'), msg = document.querySelector('#vehicle-msg');
+  const save = document.querySelector('#save-btn'), cancel = document.querySelector('#cancel-edit');
+  function reset(){ form.reset(); form.vehicle_id.value=''; document.querySelector('#form-title').textContent='Add vehicle'; save.textContent='Add vehicle'; cancel.hidden=true; }
+  cancel.onclick = reset;
+  document.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => {
+    const v = JSON.parse(b.dataset.edit);
+    Object.entries(v).forEach(([k,val]) => { if (k==='id') form.vehicle_id.value = val; else if (form[k]) form[k].value = val; });
+    document.querySelector('#form-title').textContent = 'Edit vehicle'; save.textContent = 'Save changes'; cancel.hidden = false; form.scrollIntoView({behavior:'smooth'});
+  }));
+  document.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Remove vehicle ' + b.dataset.reg + '?')) return;
+    b.disabled = true;
+    const res = await RSA.api('/api/vehicles/' + b.dataset.delete + '/delete', {method:'POST', form:{}});
+    RSA.toast(res.data.message || (res.ok ? 'Removed' : 'Failed'), res.ok ? 'success' : 'error');
+    if (res.ok) setTimeout(() => location.reload(), 600); else b.disabled = false;
+  }));
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.registration_number.value.trim()) { msg.textContent = 'Registration number is required.'; return; }
+    save.disabled = true; msg.textContent = 'Saving…';
+    const id = form.vehicle_id.value;
+    const res = await RSA.api(id ? '/api/vehicles/' + id : '/api/vehicles', {method:'POST', form:new FormData(form)});
+    save.disabled = false;
+    msg.textContent = res.data.message || (res.ok ? 'Saved' : 'Failed');
+    msg.className = 'mt notice ' + (res.ok ? 'ok' : 'danger');
+    if (res.ok) setTimeout(() => location.reload(), 600);
+  });
+})();
+</script>{% endblock %}

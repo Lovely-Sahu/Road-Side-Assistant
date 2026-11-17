@@ -1,0 +1,43 @@
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Instance and database files
+instance/
+backups/
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# User uploads
+static/uploads/*
+
+# Project-specific database files
+/database/rsa
+/rsa
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Exclude duplicate project folder
+/RSA_update_provider_location/

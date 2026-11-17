@@ -1,0 +1,811 @@
+text,label,group
+My engine is overheating and the temperature gauge is in the red,engine_overheating,1
+My engine is overheating and the temperature gauge is in the red in the city,engine_overheating,1
+My engine is overheating and the temperature gauge is in the red near the toll plaza,engine_overheating,1
+Smoke is coming out from under the bonnet,engine_overheating,2
+"At night, smoke is coming out from under the bonnet",engine_overheating,2
+"While going to office, smoke is coming out from under the bonnet",engine_overheating,2
+White steam is coming from the radiator,engine_overheating,3
+White steam is coming from the radiator near Khandagiri,engine_overheating,3
+White steam is coming from the radiator near the toll plaza,engine_overheating,3
+The temperature warning light came on and the engine feels very hot,engine_overheating,4
+The temperature warning light came on and the engine feels very hot near the toll plaza,engine_overheating,4
+"At night, the temperature warning light came on and the engine feels very hot",engine_overheating,4
+Coolant is boiling and leaking from the radiator cap,engine_overheating,5
+"Near khandagiri, coolant is boiling and leaking from the radiator cap",engine_overheating,5
+"At night, coolant is boiling and leaking from the radiator cap",engine_overheating,5
+The car is heating up a lot in traffic,engine_overheating,6
+The car is heating up a lot in traffic please help,engine_overheating,6
+The car is heating up a lot in traffic at night,engine_overheating,6
+Engine temperature keeps rising and the fan is not working,engine_overheating,7
+"With my family in the car, engine temperature keeps rising and the fan is not working",engine_overheating,7
+Engine temperature keeps rising and the fan is not working on the highway,engine_overheating,7
+There is steam from the front of the car after a long drive,engine_overheating,8
+There is steam from the front of the car after a long drive please help,engine_overheating,8
+There is steam from the front of the car after a long drive on NH16 near Cuttack,engine_overheating,8
+The radiator is leaking and the engine got too hot,engine_overheating,9
+The radiator is leaking and the engine got too hot since this morning,engine_overheating,9
+The radiator is leaking and the engine got too hot on NH16 near Cuttack,engine_overheating,9
+My bike engine is heating badly and smells hot,engine_overheating,10
+"On nh16 near cuttack, my bike engine is heating badly and smells hot",engine_overheating,10
+"With my family in the car, my bike engine is heating badly and smells hot",engine_overheating,10
+Temperature needle went to maximum on the highway,engine_overheating,11
+Temperature needle went to maximum on the highway outside the mall,engine_overheating,11
+"Please send someone quickly, temperature needle went to maximum on the highway",engine_overheating,11
+Car overheated and I had to stop on the side of the road,engine_overheating,12
+Car overheated and I had to stop on the side of the road please help,engine_overheating,12
+"Near the toll plaza, car overheated and I had to stop on the side of the road",engine_overheating,12
+The coolant level is empty and the engine is overheating,engine_overheating,13
+The coolant level is empty and the engine is overheating on the way to Puri,engine_overheating,13
+"On nh16 near cuttack, the coolant level is empty and the engine is overheating",engine_overheating,13
+There is a burning smell and the engine is very hot,engine_overheating,14
+There is a burning smell and the engine is very hot on the highway,engine_overheating,14
+There is a burning smell and the engine is very hot in the city,engine_overheating,14
+Hot water is spraying from the engine bay,engine_overheating,15
+"Near the toll plaza, hot water is spraying from the engine bay",engine_overheating,15
+Hot water is spraying from the engine bay at night,engine_overheating,15
+Red temperature light is on and steam is rising from the hood,engine_overheating,16
+"Please send someone quickly, red temperature light is on and steam is rising from the hood",engine_overheating,16
+Red temperature light is on and steam is rising from the hood in the city,engine_overheating,16
+The radiator fan stopped and the temperature is going up,engine_overheating,17
+"On nh16 near cuttack, the radiator fan stopped and the temperature is going up",engine_overheating,17
+"At night, the radiator fan stopped and the temperature is going up",engine_overheating,17
+Engine ran too hot while climbing the ghat road,engine_overheating,18
+Engine ran too hot while climbing the ghat road in the city,engine_overheating,18
+"With my family in the car, engine ran too hot while climbing the ghat road",engine_overheating,18
+The car started smoking from the bonnet while I was driving,engine_overheating,19
+The car started smoking from the bonnet while I was driving near Khandagiri,engine_overheating,19
+The car started smoking from the bonnet while I was driving outside the mall,engine_overheating,19
+The engine is boiling over,engine_overheating,20
+"In heavy traffic, the engine is boiling over",engine_overheating,20
+The engine is boiling over in the city,engine_overheating,20
+There is a sweet coolant smell and the gauge shows hot,engine_overheating,21
+"On nh16 near cuttack, there is a sweet coolant smell and the gauge shows hot",engine_overheating,21
+There is a sweet coolant smell and the gauge shows hot since this morning,engine_overheating,21
+My scooter engine is extremely hot and smoking a little,engine_overheating,22
+My scooter engine is extremely hot and smoking a little on the highway,engine_overheating,22
+My scooter engine is extremely hot and smoking a little since this morning,engine_overheating,22
+"Vehicle overheating, gauge in red zone",engine_overheating,23
+"At night, vehicle overheating, gauge in red zone",engine_overheating,23
+"Vehicle overheating, gauge in red zone on the way to Puri",engine_overheating,23
+The thermostat seems stuck and the car is overheating,engine_overheating,24
+The thermostat seems stuck and the car is overheating in the city,engine_overheating,24
+"Please send someone quickly, the thermostat seems stuck and the car is overheating",engine_overheating,24
+Steam is coming from under the hood and the engine light is on,engine_overheating,25
+Steam is coming from under the hood and the engine light is on please send someone quickly,engine_overheating,25
+Steam is coming from under the hood and the engine light is on while going to office,engine_overheating,25
+The car is running very hot and the radiator hose burst,engine_overheating,26
+The car is running very hot and the radiator hose burst near Khandagiri,engine_overheating,26
+The car is running very hot and the radiator hose burst with my family in the car,engine_overheating,26
+"Overheating problem, the engine is too hot to touch",engine_overheating,27
+"Overheating problem, the engine is too hot to touch on the way to Puri",engine_overheating,27
+"Please help, overheating problem, the engine is too hot to touch",engine_overheating,27
+The temperature meter is high and water is dripping from the radiator,engine_overheating,28
+The temperature meter is high and water is dripping from the radiator while going to office,engine_overheating,28
+"Near khandagiri, the temperature meter is high and water is dripping from the radiator",engine_overheating,28
+Engine heated up and smoke started coming out,engine_overheating,29
+Engine heated up and smoke started coming out with my family in the car,engine_overheating,29
+Engine heated up and smoke started coming out near the toll plaza,engine_overheating,29
+Car keeps overheating every few kilometres,engine_overheating,30
+Car keeps overheating every few kilometres in the city,engine_overheating,30
+Car keeps overheating every few kilometres please help,engine_overheating,30
+My brakes are not working,brake_failure,31
+My brakes are not working on the way to Puri,brake_failure,31
+"Please send someone quickly, my brakes are not working",brake_failure,31
+The brake pedal goes all the way to the floor,brake_failure,32
+"With my family in the car, the brake pedal goes all the way to the floor",brake_failure,32
+The brake pedal goes all the way to the floor on the highway,brake_failure,32
+Brakes failed while coming down the hill,brake_failure,33
+Brakes failed while coming down the hill near Khandagiri,brake_failure,33
+"Since this morning, brakes failed while coming down the hill",brake_failure,33
+The car is not stopping when I press the brake,brake_failure,34
+The car is not stopping when I press the brake near the toll plaza,brake_failure,34
+The car is not stopping when I press the brake in heavy traffic,brake_failure,34
+The brake pedal feels soft and spongy,brake_failure,35
+The brake pedal feels soft and spongy outside the mall,brake_failure,35
+The brake pedal feels soft and spongy with my family in the car,brake_failure,35
+Brake fluid is leaking and the brakes are weak,brake_failure,36
+"While going to office, brake fluid is leaking and the brakes are weak",brake_failure,36
+"Near khandagiri, brake fluid is leaking and the brakes are weak",brake_failure,36
+I pressed the brakes but nothing happened,brake_failure,37
+I pressed the brakes but nothing happened in heavy traffic,brake_failure,37
+I pressed the brakes but nothing happened in the city,brake_failure,37
+The brakes are making a grinding noise and barely work,brake_failure,38
+The brakes are making a grinding noise and barely work on NH16 near Cuttack,brake_failure,38
+"Since this morning, the brakes are making a grinding noise and barely work",brake_failure,38
+Brake warning light is on and stopping takes very long,brake_failure,39
+Brake warning light is on and stopping takes very long near Khandagiri,brake_failure,39
+Brake warning light is on and stopping takes very long on the highway,brake_failure,39
+The handbrake and foot brake both feel loose,brake_failure,40
+"Near the toll plaza, the handbrake and foot brake both feel loose",brake_failure,40
+"On nh16 near cuttack, the handbrake and foot brake both feel loose",brake_failure,40
+My bike's front brake is not responding,brake_failure,41
+My bike's front brake is not responding in heavy traffic,brake_failure,41
+"At night, my bike's front brake is not responding",brake_failure,41
+The brakes stopped working suddenly on the highway,brake_failure,42
+"Near the toll plaza, the brakes stopped working suddenly on the highway",brake_failure,42
+"With my family in the car, the brakes stopped working suddenly on the highway",brake_failure,42
+"The vehicle cannot stop properly, brakes are useless",brake_failure,43
+"Since this morning, the vehicle cannot stop properly, brakes are useless",brake_failure,43
+"The vehicle cannot stop properly, brakes are useless near Khandagiri",brake_failure,43
+Brake pedal is very hard and the car won't slow down,brake_failure,44
+Brake pedal is very hard and the car won't slow down please send someone quickly,brake_failure,44
+Brake pedal is very hard and the car won't slow down near Khandagiri,brake_failure,44
+There is no braking power at all,brake_failure,45
+"On the way to puri, there is no braking power at all",brake_failure,45
+"Please help, there is no braking power at all",brake_failure,45
+Brakes are failing and I had to use the handbrake to stop,brake_failure,46
+"Since this morning, brakes are failing and I had to use the handbrake to stop",brake_failure,46
+"Outside the mall, brakes are failing and I had to use the handbrake to stop",brake_failure,46
+The brake pads are worn out and the car skids when braking,brake_failure,47
+"Please help, the brake pads are worn out and the car skids when braking",brake_failure,47
+The brake pads are worn out and the car skids when braking in the city,brake_failure,47
+I have lost my brakes,brake_failure,48
+I have lost my brakes near Khandagiri,brake_failure,48
+I have lost my brakes please send someone quickly,brake_failure,48
+The scooter brakes are not holding,brake_failure,49
+The scooter brakes are not holding on NH16 near Cuttack,brake_failure,49
+The scooter brakes are not holding on the highway,brake_failure,49
+"Brake line seems broken, there is fluid on the road",brake_failure,50
+"Brake line seems broken, there is fluid on the road at night",brake_failure,50
+"On the highway, brake line seems broken, there is fluid on the road",brake_failure,50
+Brakes squeal and the pedal sinks down,brake_failure,51
+"At night, brakes squeal and the pedal sinks down",brake_failure,51
+"Near the toll plaza, brakes squeal and the pedal sinks down",brake_failure,51
+The truck brakes overheated and stopped working,brake_failure,52
+The truck brakes overheated and stopped working near the toll plaza,brake_failure,52
+"Near khandagiri, the truck brakes overheated and stopped working",brake_failure,52
+My car brakes are very weak after crossing water,brake_failure,53
+My car brakes are very weak after crossing water at night,brake_failure,53
+"Near khandagiri, my car brakes are very weak after crossing water",brake_failure,53
+"Pressing the brake does nothing, the car keeps rolling",brake_failure,54
+"Pressing the brake does nothing, the car keeps rolling on the way to Puri",brake_failure,54
+"With my family in the car, pressing the brake does nothing, the car keeps rolling",brake_failure,54
+ABS light is on and the brakes feel strange,brake_failure,55
+ABS light is on and the brakes feel strange since this morning,brake_failure,55
+ABS light is on and the brakes feel strange please help,brake_failure,55
+"Brake failure, I barely managed to stop",brake_failure,56
+"Brake failure, I barely managed to stop please help",brake_failure,56
+"Brake failure, I barely managed to stop on NH16 near Cuttack",brake_failure,56
+The brakes are not gripping,brake_failure,57
+"Outside the mall, the brakes are not gripping",brake_failure,57
+"On the highway, the brakes are not gripping",brake_failure,57
+Braking is not happening properly,brake_failure,58
+Braking is not happening properly near the toll plaza,brake_failure,58
+Braking is not happening properly on the highway,brake_failure,58
+The pedal has no pressure and the brakes don't respond,brake_failure,59
+The pedal has no pressure and the brakes don't respond with my family in the car,brake_failure,59
+The pedal has no pressure and the brakes don't respond near the toll plaza,brake_failure,59
+The brake system failed,brake_failure,60
+The brake system failed please send someone quickly,brake_failure,60
+The brake system failed while going to office,brake_failure,60
+I have a flat tyre,tyre_puncture,61
+I have a flat tyre at night,tyre_puncture,61
+"Near the toll plaza, i have a flat tyre",tyre_puncture,61
+My front tyre got punctured,tyre_puncture,62
+My front tyre got punctured near Khandagiri,tyre_puncture,62
+"Near the toll plaza, my front tyre got punctured",tyre_puncture,62
+The rear tyre burst on the highway,tyre_puncture,63
+"With my family in the car, the rear tyre burst on the highway",tyre_puncture,63
+"On the highway, the rear tyre burst on the highway",tyre_puncture,63
+Tyre is losing air quickly,tyre_puncture,64
+Tyre is losing air quickly with my family in the car,tyre_puncture,64
+Tyre is losing air quickly at night,tyre_puncture,64
+There is a nail stuck in my tyre,tyre_puncture,65
+"At night, there is a nail stuck in my tyre",tyre_puncture,65
+There is a nail stuck in my tyre please help,tyre_puncture,65
+The tire is completely deflated,tyre_puncture,66
+The tire is completely deflated on the highway,tyre_puncture,66
+"Please help, the tire is completely deflated",tyre_puncture,66
+My bike tyre is flat and I cannot ride,tyre_puncture,67
+My bike tyre is flat and I cannot ride please send someone quickly,tyre_puncture,67
+"In heavy traffic, my bike tyre is flat and I cannot ride",tyre_puncture,67
+The tyre has a big cut on the side,tyre_puncture,68
+"Since this morning, the tyre has a big cut on the side",tyre_puncture,68
+The tyre has a big cut on the side near Khandagiri,tyre_puncture,68
+Wheel is damaged after hitting a pothole,tyre_puncture,69
+Wheel is damaged after hitting a pothole at night,tyre_puncture,69
+Wheel is damaged after hitting a pothole in heavy traffic,tyre_puncture,69
+The spare tyre is also flat,tyre_puncture,70
+The spare tyre is also flat outside the mall,tyre_puncture,70
+The spare tyre is also flat near Khandagiri,tyre_puncture,70
+Tyre pressure warning light is on and the tyre looks low,tyre_puncture,71
+Tyre pressure warning light is on and the tyre looks low on the highway,tyre_puncture,71
+"On the way to puri, tyre pressure warning light is on and the tyre looks low",tyre_puncture,71
+The tyre blew out while driving,tyre_puncture,72
+The tyre blew out while driving near Khandagiri,tyre_puncture,72
+The tyre blew out while driving while going to office,tyre_puncture,72
+Puncture in the left rear tyre,tyre_puncture,73
+Puncture in the left rear tyre with my family in the car,tyre_puncture,73
+Puncture in the left rear tyre while going to office,tyre_puncture,73
+The tyre went flat overnight,tyre_puncture,74
+The tyre went flat overnight with my family in the car,tyre_puncture,74
+"At night, the tyre went flat overnight",tyre_puncture,74
+Air is leaking from the tyre valve,tyre_puncture,75
+Air is leaking from the tyre valve on the way to Puri,tyre_puncture,75
+Air is leaking from the tyre valve at night,tyre_puncture,75
+My scooter has a puncture,tyre_puncture,76
+"Near the toll plaza, my scooter has a puncture",tyre_puncture,76
+My scooter has a puncture please help,tyre_puncture,76
+The tyre has a bulge and looks dangerous,tyre_puncture,77
+The tyre has a bulge and looks dangerous on NH16 near Cuttack,tyre_puncture,77
+"In heavy traffic, the tyre has a bulge and looks dangerous",tyre_puncture,77
+I need help changing a flat tyre,tyre_puncture,78
+I need help changing a flat tyre at night,tyre_puncture,78
+"In heavy traffic, i need help changing a flat tyre",tyre_puncture,78
+The car is pulling to one side because a tyre is flat,tyre_puncture,79
+The car is pulling to one side because a tyre is flat in heavy traffic,tyre_puncture,79
+"Please send someone quickly, the car is pulling to one side because a tyre is flat",tyre_puncture,79
+Both front tyres are low on air,tyre_puncture,80
+Both front tyres are low on air near the toll plaza,tyre_puncture,80
+"On the highway, both front tyres are low on air",tyre_puncture,80
+The tubeless tyre is leaking slowly,tyre_puncture,81
+The tubeless tyre is leaking slowly near the toll plaza,tyre_puncture,81
+The tubeless tyre is leaking slowly with my family in the car,tyre_puncture,81
+The tyre tread came off,tyre_puncture,82
+"While going to office, the tyre tread came off",tyre_puncture,82
+"On nh16 near cuttack, the tyre tread came off",tyre_puncture,82
+A sharp stone cut my tyre,tyre_puncture,83
+A sharp stone cut my tyre on NH16 near Cuttack,tyre_puncture,83
+"In heavy traffic, a sharp stone cut my tyre",tyre_puncture,83
+The wheel rim is bent and the tyre is flat,tyre_puncture,84
+"Outside the mall, the wheel rim is bent and the tyre is flat",tyre_puncture,84
+"In heavy traffic, the wheel rim is bent and the tyre is flat",tyre_puncture,84
+Flat tire on the expressway,tyre_puncture,85
+Flat tire on the expressway in the city,tyre_puncture,85
+"Near khandagiri, flat tire on the expressway",tyre_puncture,85
+I heard a pop and now the tyre is flat,tyre_puncture,86
+I heard a pop and now the tyre is flat in heavy traffic,tyre_puncture,86
+"In the city, i heard a pop and now the tyre is flat",tyre_puncture,86
+The tyre is torn,tyre_puncture,87
+"In heavy traffic, the tyre is torn",tyre_puncture,87
+"Near the toll plaza, the tyre is torn",tyre_puncture,87
+Tyre punctured and there is no spare wheel,tyre_puncture,88
+Tyre punctured and there is no spare wheel while going to office,tyre_puncture,88
+Tyre punctured and there is no spare wheel in heavy traffic,tyre_puncture,88
+The tyre keeps going down every few kilometres,tyre_puncture,89
+"On nh16 near cuttack, the tyre keeps going down every few kilometres",tyre_puncture,89
+"At night, the tyre keeps going down every few kilometres",tyre_puncture,89
+Rear wheel tyre burst,tyre_puncture,90
+Rear wheel tyre burst near Khandagiri,tyre_puncture,90
+"Please send someone quickly, rear wheel tyre burst",tyre_puncture,90
+My car battery is dead,battery_failure,91
+"On the highway, my car battery is dead",battery_failure,91
+"Near the toll plaza, my car battery is dead",battery_failure,91
+"The car will not start, only a clicking sound",battery_failure,92
+"The car will not start, only a clicking sound on the highway",battery_failure,92
+"The car will not start, only a clicking sound with my family in the car",battery_failure,92
+Battery is drained because I left the lights on,battery_failure,93
+"In heavy traffic, battery is drained because I left the lights on",battery_failure,93
+Battery is drained because I left the lights on while going to office,battery_failure,93
+I need a jump start,battery_failure,94
+I need a jump start please help,battery_failure,94
+I need a jump start near Khandagiri,battery_failure,94
+The engine does not crank when I turn the key,battery_failure,95
+The engine does not crank when I turn the key outside the mall,battery_failure,95
+"While going to office, the engine does not crank when I turn the key",battery_failure,95
+Dashboard lights come on but the car won't start,battery_failure,96
+Dashboard lights come on but the car won't start on the way to Puri,battery_failure,96
+Dashboard lights come on but the car won't start near Khandagiri,battery_failure,96
+Battery warning light is on,battery_failure,97
+"In heavy traffic, battery warning light is on",battery_failure,97
+"On nh16 near cuttack, battery warning light is on",battery_failure,97
+The battery is weak and the starter is slow,battery_failure,98
+"With my family in the car, the battery is weak and the starter is slow",battery_failure,98
+The battery is weak and the starter is slow on the highway,battery_failure,98
+Car won't start in the morning,battery_failure,99
+Car won't start in the morning at night,battery_failure,99
+"In the city, car won't start in the morning",battery_failure,99
+Nothing happens when I turn the key,battery_failure,100
+"With my family in the car, nothing happens when I turn the key",battery_failure,100
+"Please help, nothing happens when I turn the key",battery_failure,100
+The battery terminals are corroded and the car is not starting,battery_failure,101
+"At night, the battery terminals are corroded and the car is not starting",battery_failure,101
+"While going to office, the battery terminals are corroded and the car is not starting",battery_failure,101
+"My bike self start is not working, battery seems low",battery_failure,102
+"My bike self start is not working, battery seems low please help",battery_failure,102
+"On the highway, my bike self start is not working, battery seems low",battery_failure,102
+The battery died after the car was parked for a week,battery_failure,103
+"Since this morning, the battery died after the car was parked for a week",battery_failure,103
+"Please help, the battery died after the car was parked for a week",battery_failure,103
+"The car is not starting, the battery is flat",battery_failure,104
+"The car is not starting, the battery is flat since this morning",battery_failure,104
+"At night, the car is not starting, the battery is flat",battery_failure,104
+Starter motor clicks but the engine doesn't turn over,battery_failure,105
+"Near the toll plaza, starter motor clicks but the engine doesn't turn over",battery_failure,105
+"Please help, starter motor clicks but the engine doesn't turn over",battery_failure,105
+The battery is not charging,battery_failure,106
+"At night, the battery is not charging",battery_failure,106
+The battery is not charging with my family in the car,battery_failure,106
+The car battery is swollen,battery_failure,107
+"In heavy traffic, the car battery is swollen",battery_failure,107
+The car battery is swollen since this morning,battery_failure,107
+I need someone to jump start my car,battery_failure,108
+I need someone to jump start my car in the city,battery_failure,108
+I need someone to jump start my car at night,battery_failure,108
+"The vehicle won't start, everything is dead",battery_failure,109
+"The vehicle won't start, everything is dead near the toll plaza",battery_failure,109
+"Since this morning, the vehicle won't start, everything is dead",battery_failure,109
+Key turns but there is no response from the engine,battery_failure,110
+"Please help, key turns but there is no response from the engine",battery_failure,110
+Key turns but there is no response from the engine in the city,battery_failure,110
+The car cranks slowly and then stops,battery_failure,111
+"On the highway, the car cranks slowly and then stops",battery_failure,111
+The car cranks slowly and then stops near the toll plaza,battery_failure,111
+Battery is discharged,battery_failure,112
+Battery is discharged on the way to Puri,battery_failure,112
+Battery is discharged in heavy traffic,battery_failure,112
+"My scooter will not start, the battery is dead",battery_failure,113
+"On nh16 near cuttack, my scooter will not start, the battery is dead",battery_failure,113
+"My scooter will not start, the battery is dead outside the mall",battery_failure,113
+Headlights are dim and the car won't start,battery_failure,114
+Headlights are dim and the car won't start near Khandagiri,battery_failure,114
+Headlights are dim and the car won't start near the toll plaza,battery_failure,114
+The car will not start after I left the music system on,battery_failure,115
+"In heavy traffic, the car will not start after I left the music system on",battery_failure,115
+The car will not start after I left the music system on on the highway,battery_failure,115
+Battery light is flickering and the car is hard to start,battery_failure,116
+"Since this morning, battery light is flickering and the car is hard to start",battery_failure,116
+"Near khandagiri, battery light is flickering and the car is hard to start",battery_failure,116
+"Engine fails to start, I think the battery is gone",battery_failure,117
+"Engine fails to start, I think the battery is gone outside the mall",battery_failure,117
+"Engine fails to start, I think the battery is gone in the city",battery_failure,117
+The car makes a ticking noise but does not start,battery_failure,118
+"In the city, the car makes a ticking noise but does not start",battery_failure,118
+"On nh16 near cuttack, the car makes a ticking noise but does not start",battery_failure,118
+"My battery needs replacement, the car is not starting",battery_failure,119
+"Near the toll plaza, my battery needs replacement, the car is not starting",battery_failure,119
+"My battery needs replacement, the car is not starting outside the mall",battery_failure,119
+"Low battery, cannot start the vehicle",battery_failure,120
+"Low battery, cannot start the vehicle in the city",battery_failure,120
+"Please help, low battery, cannot start the vehicle",battery_failure,120
+My car stopped suddenly while driving,engine_failure,121
+My car stopped suddenly while driving near Khandagiri,engine_failure,121
+"While going to office, my car stopped suddenly while driving",engine_failure,121
+The engine died in the middle of the road,engine_failure,122
+"Please help, the engine died in the middle of the road",engine_failure,122
+The engine died in the middle of the road in the city,engine_failure,122
+The vehicle broke down on the highway,engine_failure,123
+The vehicle broke down on the highway on the way to Puri,engine_failure,123
+"In heavy traffic, the vehicle broke down on the highway",engine_failure,123
+Engine stalled and will not restart,engine_failure,124
+Engine stalled and will not restart in heavy traffic,engine_failure,124
+"With my family in the car, engine stalled and will not restart",engine_failure,124
+The car keeps stalling at signals,engine_failure,125
+The car keeps stalling at signals on the way to Puri,engine_failure,125
+The car keeps stalling at signals in the city,engine_failure,125
+My bike engine shut off and won't start again,engine_failure,126
+My bike engine shut off and won't start again in the city,engine_failure,126
+"At night, my bike engine shut off and won't start again",engine_failure,126
+Engine is making a loud knocking noise and lost power,engine_failure,127
+Engine is making a loud knocking noise and lost power since this morning,engine_failure,127
+Engine is making a loud knocking noise and lost power outside the mall,engine_failure,127
+The car lost power and came to a stop,engine_failure,128
+"Near khandagiri, the car lost power and came to a stop",engine_failure,128
+The car lost power and came to a stop in the city,engine_failure,128
+Check engine light came on and the car stopped,engine_failure,129
+Check engine light came on and the car stopped with my family in the car,engine_failure,129
+Check engine light came on and the car stopped since this morning,engine_failure,129
+The engine cut out while I was overtaking,engine_failure,130
+The engine cut out while I was overtaking since this morning,engine_failure,130
+The engine cut out while I was overtaking at night,engine_failure,130
+The car is jerking and then the engine switches off,engine_failure,131
+"Please send someone quickly, the car is jerking and then the engine switches off",engine_failure,131
+The car is jerking and then the engine switches off on the way to Puri,engine_failure,131
+My vehicle broke down near the toll plaza,engine_failure,132
+My vehicle broke down near the toll plaza please help,engine_failure,132
+"In the city, my vehicle broke down near the toll plaza",engine_failure,132
+The engine seized,engine_failure,133
+The engine seized please help,engine_failure,133
+The engine seized please send someone quickly,engine_failure,133
+The clutch failed and the car won't move,engine_failure,134
+"Outside the mall, the clutch failed and the car won't move",engine_failure,134
+"On the highway, the clutch failed and the car won't move",engine_failure,134
+The timing belt broke and the engine stopped,engine_failure,135
+The timing belt broke and the engine stopped near the toll plaza,engine_failure,135
+The timing belt broke and the engine stopped since this morning,engine_failure,135
+The engine is misfiring and the car is shaking,engine_failure,136
+The engine is misfiring and the car is shaking outside the mall,engine_failure,136
+The engine is misfiring and the car is shaking near Khandagiri,engine_failure,136
+My car broke down and won't move,engine_failure,137
+My car broke down and won't move with my family in the car,engine_failure,137
+"Near the toll plaza, my car broke down and won't move",engine_failure,137
+The engine suddenly stopped working,engine_failure,138
+"In the city, the engine suddenly stopped working",engine_failure,138
+The engine suddenly stopped working near Khandagiri,engine_failure,138
+Strange noise from the engine and then it shut down,engine_failure,139
+"Since this morning, strange noise from the engine and then it shut down",engine_failure,139
+"Please send someone quickly, strange noise from the engine and then it shut down",engine_failure,139
+The vehicle stalls whenever I slow down,engine_failure,140
+"Near khandagiri, the vehicle stalls whenever I slow down",engine_failure,140
+The vehicle stalls whenever I slow down please help,engine_failure,140
+Engine oil warning light came on and the engine stopped,engine_failure,141
+"While going to office, engine oil warning light came on and the engine stopped",engine_failure,141
+Engine oil warning light came on and the engine stopped outside the mall,engine_failure,141
+The car lost power on the flyover,engine_failure,142
+"Since this morning, the car lost power on the flyover",engine_failure,142
+The car lost power on the flyover at night,engine_failure,142
+My scooter stopped in the middle of the road,engine_failure,143
+My scooter stopped in the middle of the road since this morning,engine_failure,143
+My scooter stopped in the middle of the road near Khandagiri,engine_failure,143
+The engine is running rough and then dies,engine_failure,144
+"Please send someone quickly, the engine is running rough and then dies",engine_failure,144
+The engine is running rough and then dies near the toll plaza,engine_failure,144
+The truck engine broke down,engine_failure,145
+"On nh16 near cuttack, the truck engine broke down",engine_failure,145
+The truck engine broke down with my family in the car,engine_failure,145
+"The car accelerates but doesn't move, maybe a clutch problem",engine_failure,146
+"The car accelerates but doesn't move, maybe a clutch problem while going to office",engine_failure,146
+"The car accelerates but doesn't move, maybe a clutch problem at night",engine_failure,146
+The engine stops every few minutes,engine_failure,147
+The engine stops every few minutes at night,engine_failure,147
+The engine stops every few minutes near the toll plaza,engine_failure,147
+Engine failure on the highway,engine_failure,148
+Engine failure on the highway please send someone quickly,engine_failure,148
+"Please help, engine failure on the highway",engine_failure,148
+My car is broken down and I need a mechanic,engine_failure,149
+My car is broken down and I need a mechanic please help,engine_failure,149
+"Since this morning, my car is broken down and I need a mechanic",engine_failure,149
+The car stopped and oil is leaking under the engine,engine_failure,150
+The car stopped and oil is leaking under the engine with my family in the car,engine_failure,150
+The car stopped and oil is leaking under the engine since this morning,engine_failure,150
+I had an accident with another car,accident,151
+"On nh16 near cuttack, i had an accident with another car",accident,151
+"In heavy traffic, i had an accident with another car",accident,151
+A truck hit my car from behind,accident,152
+A truck hit my car from behind with my family in the car,accident,152
+"Please help, a truck hit my car from behind",accident,152
+My car crashed into a tree,accident,153
+"Since this morning, my car crashed into a tree",accident,153
+My car crashed into a tree on the way to Puri,accident,153
+We collided with a bike at the junction,accident,154
+We collided with a bike at the junction in heavy traffic,accident,154
+We collided with a bike at the junction please help,accident,154
+I hit a pole while turning,accident,155
+"In the city, i hit a pole while turning",accident,155
+"With my family in the car, i hit a pole while turning",accident,155
+Someone rammed into my vehicle at the signal,accident,156
+"With my family in the car, someone rammed into my vehicle at the signal",accident,156
+"Please send someone quickly, someone rammed into my vehicle at the signal",accident,156
+My car skidded and hit the divider,accident,157
+"Near khandagiri, my car skidded and hit the divider",accident,157
+My car skidded and hit the divider on the highway,accident,157
+A bus hit us and the car is badly damaged,accident,158
+A bus hit us and the car is badly damaged in the city,accident,158
+A bus hit us and the car is badly damaged on the highway,accident,158
+There was a collision and the front bumper is broken,accident,159
+There was a collision and the front bumper is broken with my family in the car,accident,159
+There was a collision and the front bumper is broken please send someone quickly,accident,159
+The car overturned after hitting the barrier,accident,160
+The car overturned after hitting the barrier on NH16 near Cuttack,accident,160
+The car overturned after hitting the barrier at night,accident,160
+I was in a road accident and my passenger is injured,accident,161
+"Please help, i was in a road accident and my passenger is injured",accident,161
+"In heavy traffic, i was in a road accident and my passenger is injured",accident,161
+Another vehicle crashed into my scooter,accident,162
+Another vehicle crashed into my scooter in heavy traffic,accident,162
+"Near the toll plaza, another vehicle crashed into my scooter",accident,162
+My car hit a cow on the highway,accident,163
+My car hit a cow on the highway on the highway,accident,163
+My car hit a cow on the highway on NH16 near Cuttack,accident,163
+"Minor accident, the side mirror and door are damaged",accident,164
+"In the city, minor accident, the side mirror and door are damaged",accident,164
+"On the highway, minor accident, the side mirror and door are damaged",accident,164
+Head-on collision on the state highway,accident,165
+"At night, head-on collision on the state highway",accident,165
+Head-on collision on the state highway on the highway,accident,165
+My car rolled into a ditch,accident,166
+My car rolled into a ditch please send someone quickly,accident,166
+"In the city, my car rolled into a ditch",accident,166
+A car bumped into me at the parking exit,accident,167
+A car bumped into me at the parking exit please send someone quickly,accident,167
+A car bumped into me at the parking exit outside the mall,accident,167
+I crashed into the wall,accident,168
+"On the way to puri, i crashed into the wall",accident,168
+"With my family in the car, i crashed into the wall",accident,168
+"Accident near the flyover, the airbags opened",accident,169
+"Since this morning, accident near the flyover, the airbags opened",accident,169
+"Accident near the flyover, the airbags opened while going to office",accident,169
+We had a crash and the windshield is cracked,accident,170
+We had a crash and the windshield is cracked on the highway,accident,170
+"In heavy traffic, we had a crash and the windshield is cracked",accident,170
+A lorry struck my car,accident,171
+"Please help, a lorry struck my car",accident,171
+A lorry struck my car with my family in the car,accident,171
+My bike slipped and hit the footpath,accident,172
+"On the way to puri, my bike slipped and hit the footpath",accident,172
+My bike slipped and hit the footpath outside the mall,accident,172
+My car was hit by an auto rickshaw,accident,173
+My car was hit by an auto rickshaw outside the mall,accident,173
+"Since this morning, my car was hit by an auto rickshaw",accident,173
+Rear-end collision in traffic,accident,174
+"Since this morning, rear-end collision in traffic",accident,174
+Rear-end collision in traffic near the toll plaza,accident,174
+We hit a stray dog and the bumper broke,accident,175
+We hit a stray dog and the bumper broke on the highway,accident,175
+"On nh16 near cuttack, we hit a stray dog and the bumper broke",accident,175
+The vehicle in front braked suddenly and I crashed into it,accident,176
+"Near the toll plaza, the vehicle in front braked suddenly and I crashed into it",accident,176
+The vehicle in front braked suddenly and I crashed into it near Khandagiri,accident,176
+My car was involved in a collision with a truck,accident,177
+My car was involved in a collision with a truck please help,accident,177
+"Please send someone quickly, my car was involved in a collision with a truck",accident,177
+"Accident on the expressway, the car is damaged",accident,178
+"In the city, accident on the expressway, the car is damaged",accident,178
+"Accident on the expressway, the car is damaged please send someone quickly",accident,178
+Someone hit my parked car,accident,179
+"Outside the mall, someone hit my parked car",accident,179
+Someone hit my parked car near Khandagiri,accident,179
+The car spun and crashed into the railing,accident,180
+"Since this morning, the car spun and crashed into the railing",accident,180
+The car spun and crashed into the railing near Khandagiri,accident,180
+My car ran out of petrol,fuel_problem,181
+My car ran out of petrol with my family in the car,fuel_problem,181
+My car ran out of petrol outside the mall,fuel_problem,181
+Out of fuel on the highway,fuel_problem,182
+Out of fuel on the highway at night,fuel_problem,182
+Out of fuel on the highway near the toll plaza,fuel_problem,182
+The fuel tank is empty,fuel_problem,183
+The fuel tank is empty since this morning,fuel_problem,183
+"Please send someone quickly, the fuel tank is empty",fuel_problem,183
+I forgot to fill diesel and the car stopped,fuel_problem,184
+I forgot to fill diesel and the car stopped on NH16 near Cuttack,fuel_problem,184
+I forgot to fill diesel and the car stopped on the highway,fuel_problem,184
+The fuel gauge shows empty and the car won't move,fuel_problem,185
+The fuel gauge shows empty and the car won't move please send someone quickly,fuel_problem,185
+The fuel gauge shows empty and the car won't move at night,fuel_problem,185
+My bike has no petrol left,fuel_problem,186
+"In heavy traffic, my bike has no petrol left",fuel_problem,186
+My bike has no petrol left on the way to Puri,fuel_problem,186
+I need fuel delivery,fuel_problem,187
+"On the highway, i need fuel delivery",fuel_problem,187
+I need fuel delivery near Khandagiri,fuel_problem,187
+The car stopped because there is no diesel,fuel_problem,188
+The car stopped because there is no diesel outside the mall,fuel_problem,188
+"Please help, the car stopped because there is no diesel",fuel_problem,188
+Ran out of gas near the toll,fuel_problem,189
+"Outside the mall, ran out of gas near the toll",fuel_problem,189
+Ran out of gas near the toll please send someone quickly,fuel_problem,189
+Fuel reserve light was on and now the car stopped,fuel_problem,190
+Fuel reserve light was on and now the car stopped since this morning,fuel_problem,190
+Fuel reserve light was on and now the car stopped on the highway,fuel_problem,190
+"I filled the wrong fuel, petrol in a diesel car",fuel_problem,191
+"I filled the wrong fuel, petrol in a diesel car outside the mall",fuel_problem,191
+"I filled the wrong fuel, petrol in a diesel car at night",fuel_problem,191
+CNG is finished and petrol is also empty,fuel_problem,192
+CNG is finished and petrol is also empty please send someone quickly,fuel_problem,192
+CNG is finished and petrol is also empty near Khandagiri,fuel_problem,192
+The scooter ran dry,fuel_problem,193
+The scooter ran dry outside the mall,fuel_problem,193
+"Near khandagiri, the scooter ran dry",fuel_problem,193
+"Tank is dry, need petrol urgently",fuel_problem,194
+"Tank is dry, need petrol urgently in heavy traffic",fuel_problem,194
+"Tank is dry, need petrol urgently with my family in the car",fuel_problem,194
+The fuel meter is on zero,fuel_problem,195
+The fuel meter is on zero at night,fuel_problem,195
+The fuel meter is on zero on NH16 near Cuttack,fuel_problem,195
+We ran out of fuel in the middle of nowhere,fuel_problem,196
+We ran out of fuel in the middle of nowhere since this morning,fuel_problem,196
+We ran out of fuel in the middle of nowhere outside the mall,fuel_problem,196
+No petrol pump nearby and my tank is empty,fuel_problem,197
+"Please send someone quickly, no petrol pump nearby and my tank is empty",fuel_problem,197
+"In heavy traffic, no petrol pump nearby and my tank is empty",fuel_problem,197
+The car is out of diesel,fuel_problem,198
+The car is out of diesel near Khandagiri,fuel_problem,198
+The car is out of diesel on the way to Puri,fuel_problem,198
+"Fuel finished, vehicle stopped",fuel_problem,199
+"Fuel finished, vehicle stopped at night",fuel_problem,199
+"Fuel finished, vehicle stopped in heavy traffic",fuel_problem,199
+I put diesel in my petrol car by mistake,fuel_problem,200
+I put diesel in my petrol car by mistake on the highway,fuel_problem,200
+I put diesel in my petrol car by mistake outside the mall,fuel_problem,200
+The low fuel warning came on and then the engine stopped,fuel_problem,201
+The low fuel warning came on and then the engine stopped on the highway,fuel_problem,201
+"Near khandagiri, the low fuel warning came on and then the engine stopped",fuel_problem,201
+My truck has run out of diesel,fuel_problem,202
+My truck has run out of diesel in the city,fuel_problem,202
+"Since this morning, my truck has run out of diesel",fuel_problem,202
+I need five litres of petrol delivered,fuel_problem,203
+I need five litres of petrol delivered on the way to Puri,fuel_problem,203
+I need five litres of petrol delivered in heavy traffic,fuel_problem,203
+"Empty tank, the car stopped on the bypass",fuel_problem,204
+"Empty tank, the car stopped on the bypass while going to office",fuel_problem,204
+"On the highway, empty tank, the car stopped on the bypass",fuel_problem,204
+The bike stopped because the petrol is over,fuel_problem,205
+The bike stopped because the petrol is over near the toll plaza,fuel_problem,205
+The bike stopped because the petrol is over with my family in the car,fuel_problem,205
+Fuel ran out while waiting in traffic,fuel_problem,206
+Fuel ran out while waiting in traffic in the city,fuel_problem,206
+Fuel ran out while waiting in traffic with my family in the car,fuel_problem,206
+My car has zero fuel,fuel_problem,207
+My car has zero fuel on the way to Puri,fuel_problem,207
+My car has zero fuel in heavy traffic,fuel_problem,207
+"Need diesel, the tank is empty",fuel_problem,208
+"Need diesel, the tank is empty near Khandagiri",fuel_problem,208
+"Need diesel, the tank is empty since this morning",fuel_problem,208
+Petrol finished halfway through the trip,fuel_problem,209
+"On the way to puri, petrol finished halfway through the trip",fuel_problem,209
+Petrol finished halfway through the trip at night,fuel_problem,209
+The fuel indicator shows empty,fuel_problem,210
+"Please send someone quickly, the fuel indicator shows empty",fuel_problem,210
+"In heavy traffic, the fuel indicator shows empty",fuel_problem,210
+My headlights stopped working,electrical_failure,211
+"In heavy traffic, my headlights stopped working",electrical_failure,211
+"On the way to puri, my headlights stopped working",electrical_failure,211
+The dashboard went blank while driving,electrical_failure,212
+"Outside the mall, the dashboard went blank while driving",electrical_failure,212
+The dashboard went blank while driving near the toll plaza,electrical_failure,212
+All the lights in the car are not working,electrical_failure,213
+"At night, all the lights in the car are not working",electrical_failure,213
+All the lights in the car are not working in heavy traffic,electrical_failure,213
+The wiring is sparking under the dashboard,electrical_failure,214
+The wiring is sparking under the dashboard while going to office,electrical_failure,214
+The wiring is sparking under the dashboard near Khandagiri,electrical_failure,214
+A fuse blew and the indicators stopped,electrical_failure,215
+A fuse blew and the indicators stopped please send someone quickly,electrical_failure,215
+A fuse blew and the indicators stopped outside the mall,electrical_failure,215
+The power windows are not working,electrical_failure,216
+"At night, the power windows are not working",electrical_failure,216
+"In heavy traffic, the power windows are not working",electrical_failure,216
+The horn and lights are dead,electrical_failure,217
+"Please send someone quickly, the horn and lights are dead",electrical_failure,217
+"Near the toll plaza, the horn and lights are dead",electrical_failure,217
+"Electrical problem, the whole panel is off",electrical_failure,218
+"Since this morning, electrical problem, the whole panel is off",electrical_failure,218
+"With my family in the car, electrical problem, the whole panel is off",electrical_failure,218
+The headlight is flickering,electrical_failure,219
+The headlight is flickering at night,electrical_failure,219
+The headlight is flickering please help,electrical_failure,219
+The instrument cluster is dead,electrical_failure,220
+"While going to office, the instrument cluster is dead",electrical_failure,220
+The instrument cluster is dead in heavy traffic,electrical_failure,220
+My bike headlight and indicator are not working,electrical_failure,221
+My bike headlight and indicator are not working while going to office,electrical_failure,221
+"Since this morning, my bike headlight and indicator are not working",electrical_failure,221
+There is a short circuit in the car,electrical_failure,222
+There is a short circuit in the car on the way to Puri,electrical_failure,222
+There is a short circuit in the car in heavy traffic,electrical_failure,222
+The tail lights are not working,electrical_failure,223
+The tail lights are not working in heavy traffic,electrical_failure,223
+The tail lights are not working outside the mall,electrical_failure,223
+Wires are burnt near the fuse box,electrical_failure,224
+Wires are burnt near the fuse box near Khandagiri,electrical_failure,224
+Wires are burnt near the fuse box please send someone quickly,electrical_failure,224
+The central locking and windows stopped working,electrical_failure,225
+The central locking and windows stopped working please help,electrical_failure,225
+The central locking and windows stopped working outside the mall,electrical_failure,225
+Electronics in the car keep switching off,electrical_failure,226
+"Near the toll plaza, electronics in the car keep switching off",electrical_failure,226
+"At night, electronics in the car keep switching off",electrical_failure,226
+The wipers and lights stopped at the same time,electrical_failure,227
+"On the way to puri, the wipers and lights stopped at the same time",electrical_failure,227
+"With my family in the car, the wipers and lights stopped at the same time",electrical_failure,227
+Indicators are not blinking,electrical_failure,228
+Indicators are not blinking in the city,electrical_failure,228
+"In heavy traffic, indicators are not blinking",electrical_failure,228
+The dashboard lights keep flickering on and off,electrical_failure,229
+The dashboard lights keep flickering on and off while going to office,electrical_failure,229
+The dashboard lights keep flickering on and off please send someone quickly,electrical_failure,229
+The car's electrical system failed,electrical_failure,230
+"In heavy traffic, the car's electrical system failed",electrical_failure,230
+The car's electrical system failed while going to office,electrical_failure,230
+Speedometer and fuel gauge stopped working,electrical_failure,231
+"With my family in the car, speedometer and fuel gauge stopped working",electrical_failure,231
+Speedometer and fuel gauge stopped working please send someone quickly,electrical_failure,231
+Interior lights and the music system are dead but the engine runs,electrical_failure,232
+Interior lights and the music system are dead but the engine runs please help,electrical_failure,232
+Interior lights and the music system are dead but the engine runs on NH16 near Cuttack,electrical_failure,232
+The alternator seems faulty and all lights are getting dim while driving,electrical_failure,233
+The alternator seems faulty and all lights are getting dim while driving while going to office,electrical_failure,233
+The alternator seems faulty and all lights are getting dim while driving on NH16 near Cuttack,electrical_failure,233
+Sparks are coming from the wires behind the headlight,electrical_failure,234
+"In the city, sparks are coming from the wires behind the headlight",electrical_failure,234
+Sparks are coming from the wires behind the headlight please help,electrical_failure,234
+The fog lamps and headlights went off,electrical_failure,235
+The fog lamps and headlights went off please send someone quickly,electrical_failure,235
+The fog lamps and headlights went off near the toll plaza,electrical_failure,235
+"Electric fault, the screen and lights are off",electrical_failure,236
+"Since this morning, electric fault, the screen and lights are off",electrical_failure,236
+"Please help, electric fault, the screen and lights are off",electrical_failure,236
+There is a burning plastic smell from the wiring,electrical_failure,237
+"On the highway, there is a burning plastic smell from the wiring",electrical_failure,237
+There is a burning plastic smell from the wiring in the city,electrical_failure,237
+The fuse keeps blowing,electrical_failure,238
+The fuse keeps blowing on the highway,electrical_failure,238
+"At night, the fuse keeps blowing",electrical_failure,238
+Nothing electrical works but the engine is running,electrical_failure,239
+Nothing electrical works but the engine is running please send someone quickly,electrical_failure,239
+Nothing electrical works but the engine is running in the city,electrical_failure,239
+The parking lights and reverse camera stopped working,electrical_failure,240
+The parking lights and reverse camera stopped working in heavy traffic,electrical_failure,240
+The parking lights and reverse camera stopped working near Khandagiri,electrical_failure,240
+The AC is not cooling,other,241
+The AC is not cooling outside the mall,other,241
+"Please send someone quickly, the AC is not cooling",other,241
+There is a rattling noise from the back seat,other,242
+There is a rattling noise from the back seat on the way to Puri,other,242
+There is a rattling noise from the back seat since this morning,other,242
+The door lock is jammed,other,243
+The door lock is jammed near Khandagiri,other,243
+The door lock is jammed on the highway,other,243
+I locked my keys inside the car,other,244
+I locked my keys inside the car with my family in the car,other,244
+I locked my keys inside the car near the toll plaza,other,244
+The side mirror glass is cracked,other,245
+The side mirror glass is cracked with my family in the car,other,245
+"While going to office, the side mirror glass is cracked",other,245
+The seat belt is stuck,other,246
+The seat belt is stuck near Khandagiri,other,246
+"Outside the mall, the seat belt is stuck",other,246
+The car smells bad inside,other,247
+The car smells bad inside please send someone quickly,other,247
+The car smells bad inside at night,other,247
+Water is leaking into the car when it rains,other,248
+Water is leaking into the car when it rains at night,other,248
+"On the way to puri, water is leaking into the car when it rains",other,248
+The windshield has a small crack,other,249
+The windshield has a small crack with my family in the car,other,249
+"Near the toll plaza, the windshield has a small crack",other,249
+The boot will not open,other,250
+"Please help, the boot will not open",other,250
+The boot will not open on NH16 near Cuttack,other,250
+The steering makes a squeaking sound,other,251
+The steering makes a squeaking sound with my family in the car,other,251
+The steering makes a squeaking sound on the highway,other,251
+I lost my car key,other,252
+"On the way to puri, i lost my car key",other,252
+I lost my car key with my family in the car,other,252
+The paint is scratched,other,253
+The paint is scratched while going to office,other,253
+The paint is scratched please send someone quickly,other,253
+The car makes a strange noise from the suspension over bumps,other,254
+The car makes a strange noise from the suspension over bumps near Khandagiri,other,254
+The car makes a strange noise from the suspension over bumps since this morning,other,254
+My child locked the door from inside,other,255
+"On nh16 near cuttack, my child locked the door from inside",other,255
+My child locked the door from inside at night,other,255
+The glove box does not close,other,256
+"Please help, the glove box does not close",other,256
+The glove box does not close at night,other,256
+The sunroof is stuck open,other,257
+The sunroof is stuck open on NH16 near Cuttack,other,257
+"Outside the mall, the sunroof is stuck open",other,257
+There is a rat inside the car,other,258
+"Please help, there is a rat inside the car",other,258
+"With my family in the car, there is a rat inside the car",other,258
+The seat adjuster is broken,other,259
+The seat adjuster is broken in the city,other,259
+The seat adjuster is broken while going to office,other,259
+The car is very dirty and needs cleaning,other,260
+The car is very dirty and needs cleaning near Khandagiri,other,260
+The car is very dirty and needs cleaning on the way to Puri,other,260
+There is mud on the number plate,other,261
+There is mud on the number plate with my family in the car,other,261
+"Please send someone quickly, there is mud on the number plate",other,261
+The handle of the door broke,other,262
+The handle of the door broke on the highway,other,262
+"Outside the mall, the handle of the door broke",other,262
+The car mats are wet,other,263
+The car mats are wet while going to office,other,263
+"Near the toll plaza, the car mats are wet",other,263
+My phone holder fell off,other,264
+"On nh16 near cuttack, my phone holder fell off",other,264
+"On the way to puri, my phone holder fell off",other,264
+The steering wheel feels slightly loose,other,265
+"With my family in the car, the steering wheel feels slightly loose",other,265
+"On nh16 near cuttack, the steering wheel feels slightly loose",other,265
+The gear knob came off,other,266
+"Please help, the gear knob came off",other,266
+"On nh16 near cuttack, the gear knob came off",other,266
+The rear view mirror fell off,other,267
+The rear view mirror fell off please send someone quickly,other,267
+The rear view mirror fell off near Khandagiri,other,267
+The spare key is missing,other,268
+"In the city, the spare key is missing",other,268
+"With my family in the car, the spare key is missing",other,268
+The tinted glass is peeling,other,269
+The tinted glass is peeling outside the mall,other,269
+The tinted glass is peeling near the toll plaza,other,269
+The bonnet will not close properly,other,270
+"In the city, the bonnet will not close properly",other,270
+The bonnet will not close properly outside the mall,other,270

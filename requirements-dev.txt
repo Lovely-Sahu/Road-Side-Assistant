@@ -1,0 +1,3 @@
+# Optional extras for development/testing (the test suite itself only needs the standard library).
+-r requirements-web.txt
+playwright>=1.40,<2       # only for browser-level checks; run "playwright install chromium" once

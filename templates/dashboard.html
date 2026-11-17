@@ -1,0 +1,79 @@
+{% extends 'base.html' %}{% block title %}Command Center{% endblock %}{% block content %}
+<section class="dash-head">
+  <div>
+    <p class="eyebrow">RSA DRIVER COMMAND CENTER</p>
+    <h1>Good to see you,<br><span>{{ current_user['name'].split(' ')[0] }}.</span></h1>
+    <p>Your vehicle, your assistance, your journey — connected through RSA.</p>
+    <div class="hero-actions">
+      {% if active %}
+        <a class="btn primary big" href="{{ url_for('tracking', request_id=active['id']) }}">Track request #{{ active['id'] }} →</a>
+      {% else %}
+        <a class="btn primary big" href="{{ url_for('report') }}">＋ Report a problem</a>
+      {% endif %}
+      <a class="btn ghost big" href="{{ url_for('vehicles') }}">My vehicles</a>
+    </div>
+  </div>
+  <div class="health-card glass">
+    <div class="card-label">● RSA RESPONSE NETWORK</div>
+    <div class="ai-status"><span aria-hidden="true">✦</span><div><b>Providers ready right now</b><small>Approved, available and not on another job</small></div><strong>{{ provider_count }}</strong></div>
+    {% if provider_summary %}
+      <div class="provider-summary">
+        {% for category, n in provider_summary|dictsort %}<div><small>{{ category }}</small><b>{{ n }}</b></div>{% endfor %}
+      </div>
+    {% else %}
+      <div class="notice warn">No provider is free at this moment. You can still report a problem; it will be assigned as soon as one becomes available.</div>
+    {% endif %}
+    <div class="mini-grid mt"><div><small>Vehicles</small><b>{{ vehicles|length }}</b></div><div><small>Active assistance</small><b>{{ 1 if active else 0 }}</b></div></div>
+  </div>
+</section>
+
+<section class="dashboard-grid">
+  <div class="panel glass recent">
+    <div class="panel-head"><div><small>RECENT ACTIVITY</small><h2>Your RSA journey</h2></div><a class="small muted" href="{{ url_for('history') }}">Full history →</a></div>
+    {% if recent %}{% for r in recent %}
+      <a class="activity" href="{{ url_for('tracking', request_id=r['id']) }}">
+        <span class="activity-icon" aria-hidden="true">{{ '✓' if r['status']=='COMPLETED' else ('×' if r['status']=='CANCELLED' else '!') }}</span>
+        <span><b>#{{ r['id'] }} · {{ r['incident_type']|label }}</b><small>{{ r['business_name'] or 'No provider assigned' }} · {{ r['description'][:60] if r['description'] else '' }}</small></span>
+        <em class="status {{ r['status']|lower }}">{{ status_label(r['status']) }}</em>
+      </a>
+    {% endfor %}{% else %}
+      <div class="empty">No assistance requests yet. Your next journey starts with <a href="{{ url_for('report') }}">Report a problem</a>.</div>
+    {% endif %}
+  </div>
+
+  <div class="panel glass">
+    <div class="panel-head"><div><small>CURRENT REQUEST</small><h2>Live assistance</h2></div></div>
+    {% if active %}
+      <dl class="kv">
+        <dt>Request</dt><dd>#{{ active['id'] }} · {{ active['incident_type']|label }}</dd>
+        <dt>Status</dt><dd><em class="status {{ active['status']|lower }}">{{ status_label(active['status']) }}</em></dd>
+        <dt>Priority</dt><dd><span class="badge {{ active['priority']|lower }}">{{ active['priority'] }}</span></dd>
+        <dt>Provider</dt><dd>{{ active['provider_name'] or 'Waiting for a provider' }}</dd>
+        <dt>Reported</dt><dd>{{ active['created_at']|utc }}</dd>
+      </dl>
+      <a class="btn primary mt" href="{{ url_for('tracking', request_id=active['id']) }}">Open live tracking →</a>
+    {% else %}
+      <div class="empty">No active request. If you break down, <a href="{{ url_for('report') }}">report it here</a>.</div>
+    {% endif %}
+  </div>
+
+  <div class="panel glass insights">
+    <div class="panel-head"><div><small>AI INSIGHTS</small><h2>Vehicle intelligence</h2></div></div>
+    {% if health %}
+      <div class="insight"><span aria-hidden="true">✦</span><div><b>{{ health['registration_number'] }} · indicator {{ health['health_score']|round|int }}/100</b><small>{{ health['overall_status'] }} · {{ health['created_at']|utc }}</small></div></div>
+      <div class="health-bars">
+        <div><span>Battery</span><b>{{ health['battery_status'] or '—' }}</b></div>
+        <div><span>Tyres</span><b>{{ health['tyre_status'] or '—' }}</b></div>
+        <div><span>Engine</span><b>{{ health['engine_status'] or '—' }}</b></div>
+        <div><span>Brakes</span><b>{{ health['brake_status'] or '—' }}</b></div>
+        <div><span>Electrical</span><b>{{ health['electrical_status'] or '—' }}</b></div>
+      </div>
+      <p class="confidence-note">Derived from your incident reports only — RSA has no sensor/OBD data, so this is not a measured vehicle condition.</p>
+    {% else %}
+      <div class="insight"><span aria-hidden="true">✦</span><div><b>No health record yet</b><small>{% if vehicles %}A record is created when you report an incident for a registered vehicle.{% else %}Add a vehicle, then select it when reporting an incident.{% endif %}</small></div></div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="safety-banner"><span aria-hidden="true">⬟</span><div><b>Stay safe on every journey</b><small>If anyone is injured or there are flames, call 112 first. RSA providers are not an emergency medical or fire service.</small></div><a href="{{ url_for('report') }}">Get assistance →</a></section>
+{% endblock %}

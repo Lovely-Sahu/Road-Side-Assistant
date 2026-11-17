@@ -1,0 +1,201 @@
+{% extends 'base.html' %}{% block title %}Provider Command{% endblock %}{% block content %}
+<section class="page">
+  <div class="page-title"><p class="eyebrow">PROVIDER WORKSPACE</p><h1>{{ provider['business_name'] }}.</h1><p>{{ provider['service_type'] }} · Manage assigned roadside jobs and keep drivers updated.</p></div>
+
+  {% if provider['verification_status'] == 'pending' %}
+    <div class="notice warn"><b>Verification pending.</b> An administrator must approve your profile before you receive jobs.</div>
+  {% elif provider['verification_status'] == 'rejected' %}
+    <div class="notice danger"><b>Verification rejected.</b> You will not receive jobs. Contact the RSA administrator.</div>
+  {% endif %}
+  <div id="updates-banner"></div>
+
+  <div class="stat-row wide">
+    <div class="stat glass"><small>Availability</small>
+      <div class="toggle mt" role="group" aria-label="Availability">
+        <button type="button" data-availability="available" class="{{ 'on' if provider['availability'] in ('available','busy') }}">Available</button>
+        <button type="button" data-availability="offline" class="off {{ 'on' if provider['availability'] == 'offline' }}">Offline</button>
+      </div>
+      <span class="def">{% if active_jobs %}On a job: new jobs wait until you finish.{% else %}Offline providers receive no new jobs.{% endif %}</span>
+    </div>
+    <div class="stat glass"><small>Rating</small><b>{% if stats['feedback_count'] %}★ {{ stats['feedback_avg'] }}{% elif stats['rating'] %}★ {{ stats['rating'] }}{% else %}Unrated{% endif %}</b><span class="def">{{ stats['feedback_count'] }} driver review(s)</span></div>
+    <div class="stat glass"><small>Jobs</small><b>{{ stats['pending'] }} new · {{ stats['active'] }} active</b><span class="def">{{ stats['completed'] }} completed · {{ stats['rejected'] }} rejected · {{ stats['unable'] }} unable</span></div>
+    <div class="stat glass"><small>Performance</small><b>{% if stats['completion_rate'] is not none %}{{ stats['completion_rate'] }}%{% else %}—{% endif %}</b><span class="def">completion rate (completed vs unable){% if stats['avg_arrival_minutes'] is not none %} · avg {{ stats['avg_arrival_minutes'] }} min to arrive ({{ stats['arrival_samples'] }}){% endif %}</span></div>
+  </div>
+
+  <div class="panel glass mt">
+    <div class="panel-head"><div><small>LIVE LOCATION</small><h2>Share your position with drivers</h2></div></div>
+    <div class="row">
+      <label class="row" style="margin:0"><input type="checkbox" id="share-toggle" style="width:auto;margin:0" checked> Share my live location automatically when I accept a job or I'm on the way</label>
+      <button class="btn small ghost" type="button" id="base-location">Set current position as my base location</button>
+    </div>
+    <p class="small muted" id="share-status">When you tap <b>Accept</b> or <b>On the way</b>, your location is sent to the driver and updated every few seconds while you travel. It stops when service starts or the job ends. Chrome will ask once for permission — click <b>Allow</b>.</p>
+    <form id="manual-location" class="row mt" novalidate>
+      <label style="margin:0">Latitude<input name="latitude" inputmode="decimal" placeholder="20.2961" value="{{ provider['latitude'] if provider['latitude'] is not none else '' }}" style="max-width:150px"></label>
+      <label style="margin:0">Longitude<input name="longitude" inputmode="decimal" placeholder="85.8245" value="{{ provider['longitude'] if provider['longitude'] is not none else '' }}" style="max-width:150px"></label>
+      <button class="btn small ghost" type="submit" style="align-self:flex-end">Save base location</button>
+    </form>
+    <p class="small muted">Base location: {% if provider['latitude'] is not none %}{{ '%.4f'|format(provider['latitude']) }}, {{ '%.4f'|format(provider['longitude']) }}{% if provider['location_updated_at'] %} · updated {{ provider['location_updated_at']|utc }}{% endif %}{% else %}<b>not set</b> — distance-based matching cannot use you until you set it.{% endif %}</p>
+  </div>
+
+  <div class="panel glass mt">
+    <div class="panel-head"><div><small>ACTIVE JOBS</small><h2>Response queue</h2></div><span>{{ active_jobs|length }} active</span></div>
+    {% for j in active_jobs %}
+      <article class="job-card" aria-label="Job {{ j['id'] }}">
+        <header>
+          <b>Job #{{ j['id'] }} · {{ j['incident_type']|label }}</b>
+          <span class="badge {{ j['priority']|lower }}">{{ j['priority'] }}</span>
+          <em class="status {{ j['status']|lower }}">{{ j['status_label'] }}</em>
+          <span class="spacer"></span>{{ j['created_at']|utc }}
+        </header>
+        <p>{{ j['description'] or '' }}</p>
+        <div class="small muted">{{ j['driver_name'] }}{% if j['driver_phone'] %} · <a href="tel:{{ j['driver_phone'] }}">{{ j['driver_phone'] }}</a>{% endif %} · {{ j['registration_number'] or 'Vehicle not selected' }}
+          · {% if j['latitude'] is not none %}{{ j['distance_km'] if j['distance_km'] is not none else '?' }} km straight-line{% else %}driver location not shared{% endif %}
+          {% if not j['safe_to_drive'] %} · <b>not safe to drive</b>{% endif %}</div>
+        <div class="job-actions row mt">
+          {% for action in j['next_actions'] %}
+            <button type="button" class="{{ 'danger' if action in ('REJECTED','UNABLE_TO_COMPLETE') else 'primary' }}" data-job="{{ j['id'] }}" data-status="{{ action }}">{{ action_labels[action] }}</button>
+          {% endfor %}
+          <a class="btn small ghost" href="{{ url_for('tracking', request_id=j['request_id']) }}">Open job & map →</a>
+        </div>
+      </article>
+    {% else %}
+      <div class="empty">{% if provider['verification_status'] != 'approved' %}No jobs until your profile is verified.{% elif provider['availability'] == 'offline' %}You are offline. Switch to Available to receive jobs.{% else %}No assigned jobs right now. New jobs appear here automatically.{% endif %}</div>
+    {% endfor %}
+  </div>
+
+  <div class="panel glass mt">
+    <div class="panel-head"><div><small>HISTORY</small><h2>Closed jobs</h2></div></div>
+    {% if closed_jobs %}
+    <div class="table-wrap"><table class="data">
+      <thead><tr><th>Job</th><th>Assigned</th><th>Incident</th><th>Driver</th><th>Outcome</th><th>Notes</th></tr></thead>
+      <tbody>{% for j in closed_jobs %}<tr>
+        <td>#{{ j['id'] }}</td><td>{{ j['created_at']|utc }}</td><td>{{ j['incident_type']|label }}</td><td>{{ j['driver_name'] }}</td>
+        <td><em class="status {{ j['status']|lower }}">{{ j['status_label'] }}</em></td><td><small>{{ j['status_reason'] or '' }}</small></td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<div class="empty">No closed jobs yet.</div>{% endif %}
+  </div>
+
+  <details class="panel glass mt">
+    <summary><b>Business profile</b> <span class="muted small">— edit name, phone or service type</span></summary>
+    <form method="post" action="{{ url_for('provider_profile') }}" class="mt"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="form-grid">
+        <label>Business name<input name="business_name" required minlength="2" maxlength="120" value="{{ provider['business_name'] }}"></label>
+        <label>Service type<select name="service_type">{% for value,label in service_types %}<option value="{{ value }}" {% if value == provider['service_type'] %}selected{% endif %}>{{ label }}</option>{% endfor %}{% if provider['service_type'] not in service_types|map('first')|list %}<option value="{{ provider['service_type'] }}" selected disabled>{{ provider['service_type'] }} (legacy — choose one)</option>{% endif %}</select></label>
+        <label class="full">Business phone<input name="phone" required value="{{ provider['phone'] or '' }}"></label>
+      </div>
+      <p class="small muted">Changing the service type requires re-verification by an administrator.</p>
+      <button class="btn primary" type="submit">Save profile</button>
+    </form>
+  </details>
+</section>
+
+<dialog class="rsa-dialog" id="reason-dialog">
+  <form method="dialog">
+    <h3 id="reason-title">Reason</h3>
+    <label for="reason-text" class="muted small" id="reason-help"></label>
+    <textarea id="reason-text" rows="3" maxlength="500"></textarea>
+    <div class="row mt"><button class="btn primary" value="ok">Confirm</button><button class="btn ghost" value="cancel">Back</button></div>
+  </form>
+</dialog>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/provider-location.js') }}"></script><script>
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const LOC = window.RSAProviderLocation;
+  let version = null, trackingJob = null;
+
+  function askReason(title, help, required) {
+    return new Promise((resolve) => {
+      const dlg = $('#reason-dialog');
+      $('#reason-title').textContent = title; $('#reason-help').textContent = help; $('#reason-text').value = '';
+      if (!dlg.showModal) { const v = prompt(title + '\n' + help); resolve(v === null ? null : v); return; }
+      dlg.onclose = () => {
+        if (dlg.returnValue !== 'ok') return resolve(null);
+        const v = $('#reason-text').value.trim();
+        if (required && v.length < 3) { RSA.toast('Please enter a reason.', 'error'); return resolve(null); }
+        resolve(v);
+      };
+      dlg.showModal();
+    });
+  }
+
+  document.querySelectorAll('[data-job]').forEach((btn) => btn.addEventListener('click', async () => {
+    const status = btn.dataset.status;
+    let note = '';
+    if (status === 'REJECTED') { note = await askReason('Reject this job?', 'Optional: why can you not take it? It will be offered to another provider.', false); if (note === null) return; }
+    if (status === 'UNABLE_TO_COMPLETE') { note = await askReason('Unable to complete?', 'Required: what prevents you from completing it? The job will be reassigned.', true); if (note === null) return; }
+    if (status === 'COMPLETED') { note = await askReason('Mark the job completed?', 'Optional completion notes (work done, parts used).', false); if (note === null) return; }
+    document.querySelectorAll('[data-job="' + btn.dataset.job + '"]').forEach((b) => b.disabled = true);
+    if (LOC.TRACKED.indexOf(status) !== -1 && !LOC.optedOut()) $('#share-status').textContent = 'Getting your location to share with the driver…';
+    const res = await LOC.changeStatus(btn.dataset.job, status, note);
+    if (res.ok && res.location && res.location.error) {
+      try { sessionStorage.setItem('rsa-location-warning', res.location.message); } catch (e) {}
+    }
+    if (!res.ok) {
+      RSA.toast(res.data.message || 'Update failed.', 'error');
+      document.querySelectorAll('[data-job="' + btn.dataset.job + '"]').forEach((b) => b.disabled = false);
+      return;
+    }
+    RSA.toast('Job updated: ' + (res.data.status_label || status) + (res.data.location_shared ? ' · live location shared with the driver' : ''), 'success');
+    setTimeout(() => location.reload(), 500);
+  }));
+
+  document.querySelectorAll('[data-availability]').forEach((btn) => btn.addEventListener('click', async () => {
+    const res = await RSA.api('/api/provider/availability', { method: 'POST', form: { availability: btn.dataset.availability } });
+    RSA.toast(res.ok ? 'Availability: ' + res.data.availability : res.data.message, res.ok ? 'success' : 'error');
+    if (res.ok) setTimeout(() => location.reload(), 400);
+  }));
+
+  // ---- location ---------------------------------------------------------
+  function showStatus(info) {
+    const el = $('#share-status');
+    if (info.state === 'sharing') el.innerHTML = '<span class="badge active">live</span> Sharing your location with the driver for request #' + info.request + ' (±' + Math.round(info.accuracy) + ' m).';
+    else if (info.state === 'error') el.innerHTML = '<span class="badge rejected">blocked</span> ' + RSA.esc(info.message);
+    else if (info.state === 'idle') el.textContent = 'No job is being tracked right now.';
+  }
+  function syncWatch() {
+    if ($('#share-toggle').checked && trackingJob) LOC.start(showStatus);
+    else {
+      LOC.stop();
+      if (!$('#share-toggle').checked) $('#share-status').textContent = 'Automatic location sharing is off. Drivers will only see your base location.';
+    }
+  }
+  $('#share-toggle').checked = !LOC.optedOut();
+  $('#share-toggle').addEventListener('change', () => { LOC.setOptOut(!$('#share-toggle').checked); syncWatch(); });
+  try {
+    const warning = sessionStorage.getItem('rsa-location-warning');
+    if (warning) { showStatus({ state: 'error', message: warning }); sessionStorage.removeItem('rsa-location-warning'); }
+  } catch (e) {}
+  $('#manual-location').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const res = await RSA.api('/api/provider/location', { method: 'POST', form: { latitude: f.latitude.value.trim(), longitude: f.longitude.value.trim(), mode: 'base' } });
+    RSA.toast(res.ok ? 'Base location saved.' : res.data.message, res.ok ? 'success' : 'error');
+    if (res.ok) setTimeout(() => location.reload(), 600);
+  });
+  $('#base-location').addEventListener('click', () => {
+    if (!navigator.geolocation) { RSA.toast('Geolocation is not available in this browser.', 'error'); return; }
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const res = await RSA.api('/api/provider/location', { method: 'POST', form: { latitude: pos.coords.latitude, longitude: pos.coords.longitude, accuracy: pos.coords.accuracy, mode: 'base' } });
+      RSA.toast(res.ok ? 'Base location updated.' : res.data.message, res.ok ? 'success' : 'error');
+      if (res.ok) setTimeout(() => location.reload(), 600);
+    },
+      (err) => RSA.toast(err.code === 1 ? 'Location permission denied.' : 'Could not get location.', 'error'), { enableHighAccuracy: true, timeout: 15000 });
+  });
+
+  // ---- polling for new/changed jobs ---------------------------------------
+  async function poll() {
+    if (document.hidden) return;
+    const res = await RSA.api('/api/provider/jobs');
+    if (!res.ok) return;
+    trackingJob = res.data.tracking_job;
+    syncWatch();
+    if (version !== null && res.data.version !== version) {
+      $('#updates-banner').innerHTML = '<div class="notice info row"><b class="spacer">Your jobs have changed.</b><button class="btn small primary" onclick="location.reload()">Refresh</button></div>';
+    }
+    version = res.data.version;
+  }
+  poll(); setInterval(poll, 15000);
+})();
+</script>{% endblock %}
